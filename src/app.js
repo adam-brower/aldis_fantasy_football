@@ -1771,7 +1771,7 @@ function renderPowerRankings() {
       <div class="pr-info">
         <div class="pr-name">${esc(l.team.name)}${tagHTML} <span style="font-size:.6rem;color:var(--text3)">▼</span></div>
         <div class="pr-owner">
-          ${esc(ownerStr(l.team))} ·
+          <span class="karma-mgr-name">${esc(ownerStr(l.team))} · </span>
           <span class="positive">${l.luckyWins} lucky W</span> ·
           <span class="negative">${l.heartbreakers} heartbreak L</span>
         </div>
@@ -2195,32 +2195,63 @@ function renderTradeCard(tr, idx, teamById) {
 }
 
 // ── Auto-scale tables to fit container on mobile ──────────────────────────────
+// On phones/tablets: measure each table's NATURAL width (without the CSS
+// width:100% constraint) and scale it down so every column fits the viewport
+// without horizontal scrolling. The wrap's height is adjusted to compensate
+// for the CSS transform (which doesn't affect document flow).
 (function initTableScaling() {
-  if (!window.matchMedia('(max-width: 768px)').matches && !('ontouchstart' in window)) return;
+  const isTouchOrSmall = () =>
+    window.matchMedia('(max-width: 768px)').matches || 'ontouchstart' in window;
+  if (!isTouchOrSmall()) return;
+
   function scaleTable(wrap) {
     const table = wrap.querySelector('table');
     if (!table) return;
-    // Reset any previous scale
+
+    // Reset any previously-applied inline scaling so we measure cleanly.
     table.style.transform = '';
     table.style.width = '';
+    table.style.minWidth = '';
     wrap.style.height = '';
-    // Measure natural width
-    const containerW = wrap.clientWidth;
+
+    // Force the table to its NATURAL width so we can measure how wide it
+    // actually wants to be. CSS may have set width:100%/min-width:0 which
+    // would otherwise force the table to compress and confuse the measurement.
+    table.style.width = 'max-content';
+    table.style.minWidth = 'max-content';
+    // After applying max-content, scrollWidth reports the natural width.
     const tableW = table.scrollWidth;
-    if (tableW <= containerW) return;
+    const containerW = wrap.clientWidth;
+
+    if (tableW <= containerW) {
+      // Already fits — restore default behavior (let CSS govern)
+      table.style.width = '';
+      table.style.minWidth = '';
+      return;
+    }
+
     const scale = containerW / tableW;
     table.style.transform = `scale(${scale})`;
     table.style.transformOrigin = 'top left';
+    // Keep the natural width pinned so the transform can shrink it visually.
     table.style.width = `${tableW}px`;
-    // Use scrollHeight to capture full table including tfoot
-    wrap.style.height = `${table.scrollHeight * scale + 8}px`;
+    table.style.minWidth = `${tableW}px`;
+    // Adjust the wrap height since transform doesn't affect document flow.
+    wrap.style.height = `${table.scrollHeight * scale + 4}px`;
   }
   function scaleAll() {
     document.querySelectorAll('.table-wrap').forEach(scaleTable);
   }
-  // Run after renders and on resize
-  const mo = new MutationObserver(() => requestAnimationFrame(scaleAll));
+  // Run after renders and on resize. Debounce mutations so we don't thrash.
+  let pending = false;
+  const schedule = () => {
+    if (pending) return;
+    pending = true;
+    requestAnimationFrame(() => { pending = false; scaleAll(); });
+  };
+  const mo = new MutationObserver(schedule);
   mo.observe(document.body, { childList: true, subtree: true });
-  window.addEventListener('resize', () => requestAnimationFrame(scaleAll));
-  requestAnimationFrame(scaleAll);
+  window.addEventListener('resize', schedule);
+  window.addEventListener('orientationchange', schedule);
+  schedule();
 })();
