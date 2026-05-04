@@ -980,7 +980,8 @@ function renderWeeklyScores() {
         const cls = isHigh ? 'score-cell high' : isLow ? 'score-cell low' : 'score-cell';
         return `<td class="${cls}">${score > 0 ? score.toFixed(2) : '—'}</td>`;
       }).join('');
-      return `<tr><td style="text-align:center"><strong>Week ${w}</strong></td>${cells}</tr>`;
+      const wkLabel = window.innerWidth <= 430 ? 'Wk' : 'Week';
+      return `<tr><td style="text-align:center"><strong>${wkLabel} ${w}</strong></td>${cells}</tr>`;
     }).join('');
   } else {
     // ── 2-week rolling view ────────────────────────────────────────────────
@@ -1007,7 +1008,8 @@ function renderWeeklyScores() {
         const cls = isHigh ? 'score-cell high' : isLow ? 'score-cell low' : 'score-cell';
         return `<td class="${cls}">${score > 0 ? score.toFixed(2) : '—'}</td>`;
       }).join('');
-      rows.push(`<tr><td style="text-align:center"><strong>Weeks ${prev}-${curr}</strong></td>${cells}</tr>`);
+      const wkLabel2 = window.innerWidth <= 430 ? 'Wk' : 'Weeks';
+      rows.push(`<tr><td style="text-align:center"><strong>${wkLabel2} ${prev}-${curr}</strong></td>${cells}</tr>`);
     }
     tbody.innerHTML = rows.join('');
   }
@@ -1828,10 +1830,10 @@ function renderXWChart() {
       _teamName: t.name,
       borderColor: palette[i % palette.length],
       backgroundColor: palette[i % palette.length] + '22',
-      borderWidth: 2,
+      borderWidth: window.innerWidth <= 430 ? 1.2 : 2,
       tension: 0.25,
-      pointRadius: 3,
-      pointHoverRadius: 7,
+      pointRadius: window.innerWidth <= 430 ? 2 : 3,
+      pointHoverRadius: 5,
       pointBackgroundColor: palette[i % palette.length],
     };
   });
@@ -1922,10 +1924,10 @@ function renderESPNPowerChart() {
       _teamName: t.name,
       borderColor: palette[i % palette.length],
       backgroundColor: palette[i % palette.length] + '22',
-      borderWidth: 2,
+      borderWidth: window.innerWidth <= 430 ? 1.2 : 2,
       tension: 0.25,
-      pointRadius: 3,
-      pointHoverRadius: 7,
+      pointRadius: window.innerWidth <= 430 ? 2 : 3,
+      pointHoverRadius: 5,
       pointBackgroundColor: palette[i % palette.length],
       spanGaps: true,
     };
