@@ -980,8 +980,7 @@ function renderWeeklyScores() {
         const cls = isHigh ? 'score-cell high' : isLow ? 'score-cell low' : 'score-cell';
         return `<td class="${cls}">${score > 0 ? score.toFixed(2) : '—'}</td>`;
       }).join('');
-      const wkLabel = window.innerWidth <= 430 ? 'Wk' : 'Week';
-      return `<tr><td style="text-align:center"><strong>${wkLabel} ${w}</strong></td>${cells}</tr>`;
+      return `<tr><td style="text-align:center"><strong>Wk ${w}</strong></td>${cells}</tr>`;
     }).join('');
   } else {
     // ── 2-week rolling view ────────────────────────────────────────────────
@@ -1008,8 +1007,7 @@ function renderWeeklyScores() {
         const cls = isHigh ? 'score-cell high' : isLow ? 'score-cell low' : 'score-cell';
         return `<td class="${cls}">${score > 0 ? score.toFixed(2) : '—'}</td>`;
       }).join('');
-      const wkLabel2 = window.innerWidth <= 430 ? 'Wk' : 'Weeks';
-      rows.push(`<tr><td style="text-align:center"><strong>${wkLabel2} ${prev}-${curr}</strong></td>${cells}</tr>`);
+      rows.push(`<tr><td style="text-align:center"><strong>Wk ${prev}-${curr}</strong></td>${cells}</tr>`);
     }
     tbody.innerHTML = rows.join('');
   }
@@ -1830,9 +1828,9 @@ function renderXWChart() {
       _teamName: t.name,
       borderColor: palette[i % palette.length],
       backgroundColor: palette[i % palette.length] + '22',
-      borderWidth: window.innerWidth <= 430 ? 1.2 : 2,
+      borderWidth: 1,
       tension: 0.25,
-      pointRadius: window.innerWidth <= 430 ? 2 : 3,
+      pointRadius: 2,
       pointHoverRadius: 5,
       pointBackgroundColor: palette[i % palette.length],
     };
@@ -1924,9 +1922,9 @@ function renderESPNPowerChart() {
       _teamName: t.name,
       borderColor: palette[i % palette.length],
       backgroundColor: palette[i % palette.length] + '22',
-      borderWidth: window.innerWidth <= 430 ? 1.2 : 2,
+      borderWidth: 1,
       tension: 0.25,
-      pointRadius: window.innerWidth <= 430 ? 2 : 3,
+      pointRadius: 2,
       pointHoverRadius: 5,
       pointBackgroundColor: palette[i % palette.length],
       spanGaps: true,
@@ -2214,7 +2212,8 @@ function renderTradeCard(tr, idx, teamById) {
     table.style.transform = `scale(${scale})`;
     table.style.transformOrigin = 'top left';
     table.style.width = `${tableW}px`;
-    wrap.style.height = `${table.offsetHeight * scale}px`;
+    // Use scrollHeight to capture full table including tfoot
+    wrap.style.height = `${table.scrollHeight * scale + 8}px`;
   }
   function scaleAll() {
     document.querySelectorAll('.table-wrap').forEach(scaleTable);

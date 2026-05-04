@@ -937,7 +937,7 @@ td.std-cell { text-align: left; }
 }
 @media (max-width: 720px) {
   .compare-grid { grid-template-columns: 1fr; }
-  .compare-grid .vs-divider { text-align: center; }
+  .compare-grid .vs-divider { text-align: center; font-size: large;}
 }
 
 .compare-side {
@@ -1061,6 +1061,7 @@ td.std-cell { text-align: left; }
 
 /* ── Responsive: iPhone Pro / Pro Max (≤430px) ── */
 @media (max-width: 430px) {
+
   header {
     padding: .6rem .75rem;
     gap: .4rem;
@@ -1074,12 +1075,12 @@ td.std-cell { text-align: left; }
 
   main { padding: .6rem; }
   section.page-section { margin-bottom: 1.25rem; scroll-margin-top: 60px; }
-  .page-title { font-size: 1.15rem; letter-spacing: 1.5px; margin-bottom: 1rem; }
+  .page-title { font-size: 1rem; letter-spacing: 1px; margin-bottom: .75rem; }
   .section-gap { margin-top: 1rem; }
 
   /* Cards */
   .card { padding: .7rem; border-radius: 10px; overflow: hidden; }
-  .card-title { font-size: .82rem; margin-bottom: .6rem; letter-spacing: 1.5px; }
+  .card-title { font-size: .72rem; margin-bottom: .5rem; letter-spacing: 1px; }
 
   /* Tables — shrink to fit, never scroll */
   .table-wrap { overflow: hidden; }
@@ -1088,17 +1089,51 @@ td.std-cell { text-align: left; }
   .score-cell { padding: .2rem .25rem; font-size: .58rem; }
   table { line-height: 1.3; }
 
+  /* Standings table — smaller content */
+  #standings-table td { font-size: .52rem; padding: .18rem .1rem; }
+  #standings-table thead th { font-size: .42rem; padding: .18rem .1rem; }
+  #standings-table .team-name { font-size: .46rem; }
+  #standings-table .owner-name { font-size: .38rem; }
+
+  /* Standings rank column — left justified with spacing */
+  #standings-table td:first-child .rank { font-size: .45rem; width: .75rem; height: .75rem; line-height: .75rem; margin: 0; }
+  #standings-table td:first-child { padding: .1rem .2rem .1rem .05rem; width: auto; min-width: unset; max-width: unset; text-align: left; }
+  #standings-table thead th:first-child { padding: .1rem .2rem .1rem .05rem; font-size: .4rem; text-align: left; width: auto; min-width: unset; max-width: unset; }
+
   /* Charts */
   .chart-wrap { height: 220px; }
-  .chart-legend-toggle { gap: .25rem .4rem; margin-top: .5rem; }
-  .chart-legend-toggle button { padding: .15rem .4rem; font-size: .5rem; letter-spacing: 0; }
+  .chart-legend-toggle { gap: .2rem .3rem; margin-top: .4rem; }
+  .chart-legend-toggle button { padding: .12rem .32rem; font-size: .45rem; letter-spacing: 0; }
 
   /* Weekly scores team/owner header cells */
-  #scores-thead th div:first-child { font-size: .58rem !important; }
-  #scores-thead th div:last-child { font-size: .48rem !important; }
-  #scores-thead th { max-width: 5rem !important; }
+  #scores-thead th div:first-child { font-size: .5rem !important; }
+  #scores-thead th div:last-child { font-size: .42rem !important; }
+  #scores-thead th { max-width: 4.5rem !important; padding: .1rem .1rem !important; }
+  /* Wk label column */
+  #scores-body td:first-child, #scores-thead th:first-child { width: 1.4rem; min-width: 1.4rem; max-width: 1.4rem; padding: .15rem .05rem; font-size: .48rem; border-right: 1px solid var(--border); }
+  #scores-tfoot td:first-child { font-size: .38rem !important; letter-spacing: 0 !important; padding: .15rem .05rem; width: 1.4rem; min-width: 1.4rem; max-width: 1.4rem; border-right: 1px solid var(--border); white-space: normal; word-break: break-all; line-height: 1.2; }
 
-  /* Matchup cards */
+  /* Karma detail — hide opp avg and z-score columns on mobile */
+  .karma-detail th:nth-child(5),
+  .karma-detail td:nth-child(5),
+  .karma-detail th:nth-child(6),
+  .karma-detail td:nth-child(6) { display: none; }
+
+  /* Bracket — keep proper bracket layout on mobile, just shrink it */
+  .bracket-tournament {
+    grid-template-columns: 1fr calc(var(--bracket-stub) * 2) 1fr;
+    --bracket-gap: 1.5rem;
+    --bracket-stub: 14px;
+    --bracket-line-w: 1px;
+  }
+  .bracket-rd.r1 > .bracket-game::after,
+  .bracket-rd.r1 > .bracket-game::before,
+  .bracket-rd.r2 > .bracket-game::before { display: block; }
+  .bracket-name { font-size: .55rem; }
+  .bracket-score { font-size: .6rem; }
+  .bracket-seed { font-size: .5rem; margin-right: .2rem; }
+  .bracket-team { padding: .3rem .4rem; gap: .3rem; }
+  .bracket-game { padding: 0; }
   .matchup-grid { gap: .6rem; }
   .matchup-card { padding: .7rem; gap: .5rem; }
   .matchup-h { gap: .3rem; }
@@ -1110,18 +1145,6 @@ td.std-cell { text-align: left; }
 
   /* Week selector */
   .week-btn { padding: .25rem .5rem; font-size: .6rem; }
-
-  /* Bracket */
-  .bracket-tournament {
-    grid-template-columns: 1fr;
-    --bracket-gap: 1.25rem;
-  }
-  .bracket-rd.r1 > .bracket-game::after,
-  .bracket-rd.r1 > .bracket-game::before,
-  .bracket-rd.r2 > .bracket-game::before { display: none; }
-  .bracket-name { font-size: .65rem; }
-  .bracket-score { font-size: .68rem; }
-  .bracket-game { padding: .4rem .5rem; }
 
   /* Power rankings */
   .pr-item { gap: .4rem; }
