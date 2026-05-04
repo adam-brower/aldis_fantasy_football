@@ -1,0 +1,228 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Aldi's Fantasy Football - <span>Nonchalant League</span></title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+  <link rel="stylesheet" href="./css/styles.css" />
+  <!-- <link rel="icon" href="./assets/favicon.png" type="image/png" /> -->
+</head>
+<body>
+
+<!-- ── Header ─────────────────────────────────────────────────────────────── -->
+<header>
+  <!-- <img class="logo-img" src="./assets/logo.png" alt="League Logo" /> -->
+  <div class="logo">Aldi's Fantasy Football - <span>The Nonchalant League</span></div>
+  <div id="season-selector" style="display:none"></div>
+  <div class="header-status">
+    <div class="status-dot" id="statusDot"></div>
+    <span id="statusText">Loading…</span>
+  </div>
+</header>
+
+<!-- ── Main ───────────────────────────────────────────────────────────────── -->
+<main>
+  <div id="loading">
+    <div class="spinner"></div>
+    <div class="loading-text">Fetching league data from ESPN…</div>
+  </div>
+
+  <div id="error-panel">
+    <h3>⚠ Could not load ESPN data</h3>
+    <p id="error-msg"></p>
+    <p style="margin-top:1rem">Make sure <code>data.json</code> is present (run <code>python fetch.py</code>) then <a href="#" onclick="location.reload()" style="color:var(--accent)">refresh this page</a>.</p>
+  </div>
+
+  <div id="app" style="display:none">
+
+    <!-- ── Standings ──────────────────────────────── -->
+    <section class="page-section" id="sec-standings">
+      <div class="page-title">League <span>Standings</span> <span class="info-icon" data-tip="Click any column header to sort. The active sort column is highlighted across all rows. By default stats are regular season only; toggle 'Include playoff weeks' to incorporate playoffs. When playoffs are included, extra PO REC / PO PF / PO PA columns appear.">i</span></div>
+      <div style="display:flex;align-items:center;gap:.6rem;margin-bottom:1rem;font-size:.85rem;color:var(--text2)">
+        <input type="checkbox" id="includePlayoffs" style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)" />
+        <label for="includePlayoffs" style="cursor:pointer;user-select:none">
+          Include playoff weeks <span id="standings-scope-label" style="color:var(--text3);margin-left:.4rem"></span>
+        </label>
+      </div>
+      <div class="table-wrap card">
+        <table id="standings-table">
+          <thead>
+            <tr id="standings-thead"></tr>
+          </thead>
+          <tbody id="standings-body"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Weekly Scores (TRANSPOSED: weeks down rows, teams across) ─ -->
+    <section class="page-section" id="sec-scores">
+      <div class="page-title">Weekly <span>Scores</span> <span class="info-icon" data-tip="Reads top-down by week. The table will grow as the season progresses. Each week's highest (cyan) and lowest (red) scores are highlighted. Footer rows show season totals for high/low single-week, 2-week streak highs'lows, and a team's total touchdown count for the season.">i</span></div>
+      <div style="display:flex;align-items:center;gap:1.25rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.85rem;color:var(--text2)">
+        <label style="display:flex;align-items:center;gap:.5rem;cursor:pointer">
+          <input type="checkbox" id="show2WkRolling" style="width:18px;height:18px;cursor:pointer;accent-color:var(--accent)" />
+          Show 2-week rolling scores
+        </label>
+      </div>
+      <div class="table-wrap card">
+        <table id="scores-table">
+          <thead>
+            <tr id="scores-thead"></tr>
+          </thead>
+          <tbody id="scores-body"></tbody>
+          <tfoot id="scores-tfoot"></tfoot>
+        </table>
+      </div>
+    </section>
+
+    <!-- ── Matchups ───────────────────────────────── -->
+    <section class="page-section" id="sec-matchups">
+      <div class="page-title">Season <span>Matches</span></div>
+      <div class="week-selector" id="matchup-week-selector"></div>
+      <div class="matchup-grid" id="matchup-grid"></div>
+    </section>
+
+    <!-- ── Head-to-Head ───────────────────────────── -->
+    <section class="page-section" id="sec-h2h">
+      <div class="page-title">Head-to-Head <span>Records</span> <span class="info-icon" data-tip="Pick two teams to compare directly, or click 'Show full table' to view every team's simulated record vs every other team across the season.">i</span></div>
+
+      <div class="card">
+        <div class="card-title">Team Comparison</div>
+        <div class="compare-bar">
+          <div><label>Team A</label><select id="cmpA"></select></div>
+          <div class="compare-vs">VS</div>
+          <div><label>Team B</label><select id="cmpB"></select></div>
+        </div>
+        <div id="compare-result"></div>
+      </div>
+
+      <div class="section-gap">
+        <div class="toggle-row">
+          <button class="week-btn" id="show-full-h2h-btn" onclick="toggleFullH2H()">Show full table ▾</button>
+          <button class="week-btn" id="h2h-single-btn" onclick="showH2H('single')" style="display:none">Single Week</button>
+          <button class="week-btn" id="h2h-biweek-btn" onclick="showH2H('biweek')" style="display:none">Two-Week Rolling</button>
+        </div>
+        <div id="full-h2h-area" style="display:none">
+          <div class="table-wrap card" id="h2h-single-wrap">
+            <table id="h2h-single-table" class="h2h-table"></table>
+          </div>
+          <div class="table-wrap card section-gap" id="h2h-biweek-wrap" style="display:none">
+            <table id="h2h-biweek-table" class="h2h-table"></table>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Power Rankings ────────────────────────── -->
+    <section class="page-section" id="sec-power">
+      <div class="page-title">League <span>Trends</span> <span class="info-icon" data-tip="Scaled Expected Wins: each week your score is placed on a 0–1 linear scale between the league's lowest and highest scorer. A score of 1 means you were the top scorer that week; 0 means the lowest. These are summed across weeks to produce cumulative xW. Weeks 16–17 (the 2-week championship round) count as a single game. Hover any line for the cumulative xW and the change from the prior week.">i</span></div>
+
+      <!-- ESPN power rankings chart (only if data is present) -->
+      <div id="espn-pr-card" style="display:none">
+        <div class="card">
+          <div class="card-title">Power Ranking by Week</div>
+          <div class="chart-wrap">
+            <canvas id="espn-pr-chart"></canvas>
+          </div>
+          <div class="chart-legend-toggle" id="espn-pr-legend"></div>
+        </div>
+      </div>
+
+      <!-- xW progression chart -->
+      <div class="card section-gap">
+        <div class="card-title">xW Progression</div>
+        <div class="chart-wrap">
+          <canvas id="xw-chart"></canvas>
+        </div>
+        <div class="chart-legend-toggle" id="xw-legend"></div>
+      </div>
+
+      <div class="grid-2 section-gap">
+        <div class="card">
+          <div class="card-title">xW Power Rankings</div>
+          <div id="power-list"></div>
+        </div>
+        <div class="card">
+          <div class="card-title">
+            Schedule Karma <span class="info-icon" data-tip="For each week we measure your opponent's z-score — how many standard deviations their actual score was from their own season mean. The pts column shows their raw under/over-performance summed across the season. Lucky W = you won AND opponent was >1σ below their normal. Heartbreak L = you lost AND opponent was >1σ above their normal. Click a row for the per-week breakdown.">i</span>
+          </div>
+          <div id="karma-list"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Playoff Predictor ─────────────────────── -->
+    <section class="page-section" id="sec-bracket">
+      <div class="page-title">Playoff <span>Bracket</span> <span class="info-icon" data-tip="During the regular season this shows a predicted bracket based on current seeding. Tiebreaker chain for each predicted matchup: 2-week rolling H2H → direct H2H → Points For. Once playoffs start the actual results take over (toggle to overlay the prediction).">i</span></div>
+      <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap;margin-bottom:1rem;font-size:.85rem;color:var(--text2)" id="bracket-controls"></div>
+      <div class="bracket-grid">
+        <div class="card bracket-card">
+          <div class="card-title">Playoff Bracket (Top 4 Seeds)</div>
+          <div id="bracket-playoff"></div>
+        </div>
+        <div class="card bracket-card">
+          <div class="card-title">Consolation Bracket (Bottom 4)</div>
+          <div id="bracket-consolation"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Trade Analyzer ───────────────────────── -->
+    <section class="page-section" id="sec-trades">
+      <div class="page-title">Trade <span>Analyzer</span> <span class="info-icon" data-tip="All trades from the season pulled from ESPN's recent activity. For each side, we show the players received plus their total fantasy points scored as starters across the season — so you can see who got the better haul.">i</span></div>
+      <div id="trades-list"></div>
+    </section>
+
+  </div><!-- /#app -->
+
+  <!-- ── All-Time View ─────────────────────────────────────────────────────── -->
+  <div id="app-alltime" style="display:none">
+    <section class="page-section">
+      <div class="page-title">All-Time <span>Records</span></div>
+      <div class="grid-2">
+        <div class="card" id="alltime-season-records"></div>
+        <div class="card" id="alltime-championships"></div>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="page-title">Owner vs Owner <span>All-Time</span></div>
+      <div class="card" id="alltime-h2h"></div>
+    </section>
+
+    <section class="page-section">
+      <div class="page-title">Fun <span>Stats</span></div>
+      <div class="grid-2">
+        <div class="card" id="alltime-fun-stats"></div>
+        <div class="card" id="alltime-streaks"></div>
+      </div>
+    </section>
+
+    <section class="page-section">
+      <div class="page-title">Single-Game <span>Records</span></div>
+      <div class="card" id="alltime-game-records"></div>
+    </section>
+  </div><!-- /#app-alltime -->
+
+  <!-- Floating tooltip for player score breakdowns -->
+  <div class="breakdown-tip" id="breakdown-tip"></div>
+
+  <!-- Matchup detail modal -->
+  <div class="modal-backdrop" id="matchup-modal" onclick="if (event.target===this) closeMatchupModal()">
+    <div class="modal" role="dialog" aria-modal="true">
+      <div class="modal-head">
+        <h2 id="matchup-modal-title">Matchup</h2>
+        <button class="modal-close" onclick="closeMatchupModal()" aria-label="Close">×</button>
+      </div>
+      <div class="modal-body" id="matchup-modal-body"></div>
+      <div class="modal-note" id="matchup-modal-note" style="display:none"></div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="./src/app.js"></script>
+</body>
+</html>

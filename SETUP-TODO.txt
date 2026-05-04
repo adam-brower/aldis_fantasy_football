@@ -1,0 +1,86 @@
+SETUP: GitHub Pages + Auto-Updating League Data
+=================================================
+
+PREREQUISITES:
+- Python 3.x installed locally (for initial data fetch)
+- A GitHub account
+
+FILE STRUCTURE:
+  index.html          - Main HTML page
+  css/styles.css      - All styling
+  src/app.js          - UI/rendering logic
+  src/stats.js        - Computation helpers
+  src/espn-api.js     - Data fetching (loads from data/ folder)
+  fetch.py            - Python script to pull data from ESPN API
+  data/               - Season JSON files (2023.json, 2024.json, 2025.json)
+  .github/workflows/  - GitHub Actions for auto-updating data
+
+-----------------------------------------------
+
+1. [ ] Create a new GitHub repository
+       - Go to https://github.com/new
+       - Name it (e.g. "fantasy-league" or "aldis-ff")
+       - Set to Public (required for free GitHub Pages) or Private (requires Pro)
+
+2. [ ] Initialize and push this folder to the repo
+       - git init
+       - git add .
+       - git commit -m "Initial commit"
+       - git remote add origin https://github.com/YOUR_USERNAME/YOUR_REPO.git
+       - git push -u origin main
+
+3. [ ] Add ESPN secrets to GitHub (required for auto-updating)
+       - Go to repo Settings → Secrets and variables → Actions
+       - Click "New repository secret"
+       - Add: Name = ESPN_S2, Value = your espn_s2 cookie
+       - Add: Name = SWID, Value = your SWID cookie (including curly braces)
+       
+       HOW TO GET COOKIES:
+       - Log in to ESPN Fantasy at https://fantasy.espn.com
+       - Open browser DevTools (F12) → Application → Cookies
+       - Copy the values for "espn_s2" and "SWID"
+
+4. [ ] Enable GitHub Pages
+       - Go to repo Settings → Pages
+       - Source: "Deploy from a branch"
+       - Branch: main, Folder: / (root)
+       - Click Save
+       - Site will be live at: https://YOUR_USERNAME.github.io/YOUR_REPO/
+
+5. [ ] Test the GitHub Actions workflow
+       - Go to repo Actions tab
+       - Click "Update League Data" workflow on the left
+       - Click "Run workflow" → "Run workflow"
+       - Wait for it to complete (green checkmark)
+       - Verify data/ files were updated (check commit history)
+
+6. [ ] Verify the site works
+       - Visit your GitHub Pages URL
+       - Confirm standings, scores, and charts load correctly
+       - Select different seasons from the dropdown
+
+7. [ ] Share the site URL with your leaguemates!
+
+-----------------------------------------------
+BEFORE PUSHING — REMOVE HARDCODED COOKIES:
+
+   fetch.py (lines 63-64):
+     ESPN_S2 = os.environ.get("ESPN_S2", "AEBeKQGIWwr3zv1...")  ← remove the fallback string
+     SWID    = os.environ.get("SWID", "{475ACA4F-...}")         ← remove the fallback string
+
+   Change those lines to:
+     ESPN_S2 = os.environ["ESPN_S2"]
+     SWID    = os.environ["SWID"]
+
+   That's the ONLY file with hardcoded cookie values.
+   The workflow file (.github/workflows/update-data.yml) already
+   references secrets correctly — no changes needed there.
+
+-----------------------------------------------
+NOTES:
+- The workflow auto-runs every Tuesday at 8 AM UTC (after Monday Night Football)
+- To run manually: Actions tab → Update League Data → Run workflow
+- If ESPN cookies expire, update the GitHub secrets (step 3)
+- To change the update schedule, edit .github/workflows/update-data.yml (cron line)
+- Historical data (2023, 2024) is already baked into data/ — no action needed
+- The site is fully static (no server needed) — GitHub Pages serves it directly

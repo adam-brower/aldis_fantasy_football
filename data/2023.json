@@ -1,0 +1,1040 @@
+{
+  "lastUpdated": "2026-05-04T13:42:49.767161",
+  "season": 2023,
+  "leagueId": 12705243,
+  "settings": {
+    "name": "Nonchalant Fantasy Football",
+    "playoffTeamCount": 4,
+    "regularSeasonWeeks": 14,
+    "teamCount": 8,
+    "combineWeeks": [
+      [
+        15,
+        16
+      ],
+      [
+        17,
+        18
+      ]
+    ]
+  },
+  "scoringRules": {},
+  "teams": [
+    {
+      "id": 1,
+      "name": "MVPickett",
+      "abbrev": "MVP",
+      "owner": "Adam Brower",
+      "wins": 11,
+      "losses": 3,
+      "ties": 0,
+      "pointsFor": 2583.75,
+      "pointsAgainst": 0,
+      "playoffSeed": 1,
+      "totalWins": 13,
+      "totalLosses": 3
+    },
+    {
+      "id": 2,
+      "name": "Riley Reid Option",
+      "abbrev": "RRO",
+      "owner": "Jason Head",
+      "wins": 9,
+      "losses": 5,
+      "ties": 0,
+      "pointsFor": 2364.75,
+      "pointsAgainst": 0,
+      "playoffSeed": 2,
+      "totalWins": 10,
+      "totalLosses": 6
+    },
+    {
+      "id": 3,
+      "name": "Derrick Henry's Left Nut",
+      "abbrev": "DHLN",
+      "owner": "Macks Weiser",
+      "wins": 8,
+      "losses": 6,
+      "ties": 0,
+      "pointsFor": 2207.55,
+      "pointsAgainst": 0,
+      "playoffSeed": 3,
+      "totalWins": 9,
+      "totalLosses": 7
+    },
+    {
+      "id": 4,
+      "name": "Devonta Smith's Big Balls",
+      "abbrev": "DSBB",
+      "owner": "Evan Konigsberg",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "pointsFor": 2351.65,
+      "pointsAgainst": 0,
+      "playoffSeed": 4,
+      "totalWins": 6,
+      "totalLosses": 10
+    },
+    {
+      "id": 5,
+      "name": "BIG BOYZ INC.",
+      "abbrev": "BBC",
+      "owner": "Tom Gallagher",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "pointsFor": 2228.2,
+      "pointsAgainst": 0,
+      "playoffSeed": 5,
+      "totalWins": 7,
+      "totalLosses": 9
+    },
+    {
+      "id": 6,
+      "name": "Rod Wave",
+      "abbrev": "RW",
+      "owner": "Jonathan Rodriguez",
+      "wins": 6,
+      "losses": 8,
+      "ties": 0,
+      "pointsFor": 2075.15,
+      "pointsAgainst": 0,
+      "playoffSeed": 6,
+      "totalWins": 6,
+      "totalLosses": 10
+    },
+    {
+      "id": 7,
+      "name": "Doski",
+      "abbrev": "DOSK",
+      "owner": "Dennis Skiba",
+      "wins": 5,
+      "losses": 9,
+      "ties": 0,
+      "pointsFor": 2298.4,
+      "pointsAgainst": 0,
+      "playoffSeed": 7,
+      "totalWins": 6,
+      "totalLosses": 10
+    },
+    {
+      "id": 8,
+      "name": "Belichick's Apprentice",
+      "abbrev": "BA",
+      "owner": "Jake Kerstetter",
+      "wins": 5,
+      "losses": 9,
+      "ties": 0,
+      "pointsFor": 2320.5,
+      "pointsAgainst": 0,
+      "playoffSeed": 8,
+      "totalWins": 7,
+      "totalLosses": 9
+    }
+  ],
+  "schedule": {
+    "1": [
+      {
+        "week": 1,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 93.7,
+        "awayScore": 148.2,
+        "homeScoreApi": 93.7,
+        "awayScoreApi": 148.2,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 1,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 124.35,
+        "awayScore": 149.4,
+        "homeScoreApi": 124.35,
+        "awayScoreApi": 149.4,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 1,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 127.8,
+        "awayScore": 95.8,
+        "homeScoreApi": 127.8,
+        "awayScoreApi": 95.8,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 1,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 98.55,
+        "awayScore": 130.25,
+        "homeScoreApi": 98.55,
+        "awayScoreApi": 130.25,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "2": [
+      {
+        "week": 2,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 164.7,
+        "awayScore": 139.55,
+        "homeScoreApi": 164.7,
+        "awayScoreApi": 139.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 2,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 88.7,
+        "awayScore": 159.0,
+        "homeScoreApi": 88.7,
+        "awayScoreApi": 159.0,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 2,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 176.75,
+        "awayScore": 109.05,
+        "homeScoreApi": 176.75,
+        "awayScoreApi": 109.05,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 2,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 127.95,
+        "awayScore": 111.55,
+        "homeScoreApi": 127.95,
+        "awayScoreApi": 111.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "3": [
+      {
+        "week": 3,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 165.9,
+        "awayScore": 167.55,
+        "homeScoreApi": 165.9,
+        "awayScoreApi": 167.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 3,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 118.25,
+        "awayScore": 157.9,
+        "homeScoreApi": 118.25,
+        "awayScoreApi": 157.9,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 3,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 156.9,
+        "awayScore": 165.95,
+        "homeScoreApi": 156.9,
+        "awayScoreApi": 165.95,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 3,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 132.55,
+        "awayScore": 137.85,
+        "homeScoreApi": 132.55,
+        "awayScoreApi": 137.85,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "4": [
+      {
+        "week": 4,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 210.9,
+        "awayScore": 130.1,
+        "homeScoreApi": 210.9,
+        "awayScoreApi": 130.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 4,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 158.3,
+        "awayScore": 97.7,
+        "homeScoreApi": 158.3,
+        "awayScoreApi": 97.7,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 4,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 108.05,
+        "awayScore": 107.45,
+        "homeScoreApi": 108.05,
+        "awayScoreApi": 107.45,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 4,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 92.15,
+        "awayScore": 107.05,
+        "homeScoreApi": 92.15,
+        "awayScoreApi": 107.05,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "5": [
+      {
+        "week": 5,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 120.95,
+        "awayScore": 87.05,
+        "homeScoreApi": 120.95,
+        "awayScoreApi": 87.05,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 5,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 123.6,
+        "awayScore": 154.45,
+        "homeScoreApi": 123.6,
+        "awayScoreApi": 154.45,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 5,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 113.75,
+        "awayScore": 112.35,
+        "homeScoreApi": 113.75,
+        "awayScoreApi": 112.35,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 5,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 214.7,
+        "awayScore": 103.4,
+        "homeScoreApi": 214.7,
+        "awayScoreApi": 103.4,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "6": [
+      {
+        "week": 6,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 139.45,
+        "awayScore": 91.4,
+        "homeScoreApi": 139.45,
+        "awayScoreApi": 91.4,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 6,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 137.95,
+        "awayScore": 127.65,
+        "homeScoreApi": 137.95,
+        "awayScoreApi": 127.65,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 6,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 130.5,
+        "awayScore": 83.8,
+        "homeScoreApi": 130.5,
+        "awayScoreApi": 83.8,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 6,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 119.35,
+        "awayScore": 110.45,
+        "homeScoreApi": 119.35,
+        "awayScoreApi": 110.45,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "7": [
+      {
+        "week": 7,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 83.1,
+        "awayScore": 98.65,
+        "homeScoreApi": 83.1,
+        "awayScoreApi": 98.65,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 7,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 150.8,
+        "awayScore": 127.75,
+        "homeScoreApi": 150.8,
+        "awayScoreApi": 127.75,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 7,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 108.5,
+        "awayScore": 121.25,
+        "homeScoreApi": 108.5,
+        "awayScoreApi": 121.25,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 7,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 143.95,
+        "awayScore": 109.15,
+        "homeScoreApi": 143.95,
+        "awayScoreApi": 109.15,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "8": [
+      {
+        "week": 8,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 157.8,
+        "awayScore": 159.5,
+        "homeScoreApi": 157.8,
+        "awayScoreApi": 159.5,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 8,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 151.3,
+        "awayScore": 132.5,
+        "homeScoreApi": 151.3,
+        "awayScoreApi": 132.5,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 8,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 71.5,
+        "awayScore": 119.75,
+        "homeScoreApi": 71.5,
+        "awayScoreApi": 119.75,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 8,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 157.05,
+        "awayScore": 146.3,
+        "homeScoreApi": 157.05,
+        "awayScoreApi": 146.3,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "9": [
+      {
+        "week": 9,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 136.1,
+        "awayScore": 140.1,
+        "homeScoreApi": 136.1,
+        "awayScoreApi": 140.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 9,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 105.45,
+        "awayScore": 122.2,
+        "homeScoreApi": 105.45,
+        "awayScoreApi": 122.2,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 9,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 126.65,
+        "awayScore": 120.65,
+        "homeScoreApi": 126.65,
+        "awayScoreApi": 120.65,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 9,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 100.05,
+        "awayScore": 156.05,
+        "homeScoreApi": 100.05,
+        "awayScoreApi": 156.05,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "10": [
+      {
+        "week": 10,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 145.95,
+        "awayScore": 131.7,
+        "homeScoreApi": 145.95,
+        "awayScoreApi": 131.7,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 10,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 129.85,
+        "awayScore": 121.85,
+        "homeScoreApi": 129.85,
+        "awayScoreApi": 121.85,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 10,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 118.9,
+        "awayScore": 151.6,
+        "homeScoreApi": 118.9,
+        "awayScoreApi": 151.6,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 10,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 93.35,
+        "awayScore": 155.95,
+        "homeScoreApi": 93.35,
+        "awayScoreApi": 155.95,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "11": [
+      {
+        "week": 11,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 138.15,
+        "awayScore": 129.35,
+        "homeScoreApi": 138.15,
+        "awayScoreApi": 129.35,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 11,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 78.2,
+        "awayScore": 156.65,
+        "homeScoreApi": 78.2,
+        "awayScoreApi": 156.65,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 11,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 91.75,
+        "awayScore": 123.4,
+        "homeScoreApi": 91.75,
+        "awayScoreApi": 123.4,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 11,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 147.3,
+        "awayScore": 116.7,
+        "homeScoreApi": 147.3,
+        "awayScoreApi": 116.7,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "12": [
+      {
+        "week": 12,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 157.65,
+        "awayScore": 151.75,
+        "homeScoreApi": 157.65,
+        "awayScoreApi": 151.75,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 12,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 120.3,
+        "awayScore": 138.85,
+        "homeScoreApi": 120.3,
+        "awayScoreApi": 138.85,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 12,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 158.3,
+        "awayScore": 119.5,
+        "homeScoreApi": 158.3,
+        "awayScoreApi": 119.5,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 12,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 99.95,
+        "awayScore": 132.25,
+        "homeScoreApi": 99.95,
+        "awayScoreApi": 132.25,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "13": [
+      {
+        "week": 13,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 149.8,
+        "awayScore": 149.55,
+        "homeScoreApi": 149.8,
+        "awayScoreApi": 149.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 13,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 157.3,
+        "awayScore": 165.1,
+        "homeScoreApi": 157.3,
+        "awayScoreApi": 165.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 13,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 90.6,
+        "awayScore": 113.8,
+        "homeScoreApi": 90.6,
+        "awayScoreApi": 113.8,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 13,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 113.9,
+        "awayScore": 133.6,
+        "homeScoreApi": 113.9,
+        "awayScoreApi": 133.6,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "14": [
+      {
+        "week": 14,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 165.35,
+        "awayScore": 138.55,
+        "homeScoreApi": 165.35,
+        "awayScoreApi": 138.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 14,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 102.95,
+        "awayScore": 107.7,
+        "homeScoreApi": 102.95,
+        "awayScoreApi": 107.7,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 14,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 98.9,
+        "awayScore": 91.05,
+        "homeScoreApi": 98.9,
+        "awayScoreApi": 91.05,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 14,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 161.4,
+        "awayScore": 76.0,
+        "homeScoreApi": 161.4,
+        "awayScoreApi": 76.0,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "15": [
+      {
+        "week": 15,
+        "homeTeamId": 1,
+        "awayTeamId": 4,
+        "homeScore": 145.7,
+        "awayScore": 107.1,
+        "homeScoreApi": 145.7,
+        "awayScoreApi": 107.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 15,
+        "homeTeamId": 2,
+        "awayTeamId": 3,
+        "homeScore": 118.3,
+        "awayScore": 116.75,
+        "homeScoreApi": 118.3,
+        "awayScoreApi": 116.75,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 15,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 151.7,
+        "awayScore": 136.2,
+        "homeScoreApi": 151.7,
+        "awayScoreApi": 136.2,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 15,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 77.65,
+        "awayScore": 159.9,
+        "homeScoreApi": 77.65,
+        "awayScoreApi": 159.9,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "16": [
+      {
+        "week": 16,
+        "homeTeamId": 1,
+        "awayTeamId": 4,
+        "homeScore": 132.75,
+        "awayScore": 138.35,
+        "homeScoreApi": 132.75,
+        "awayScoreApi": 138.35,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 16,
+        "homeTeamId": 2,
+        "awayTeamId": 3,
+        "homeScore": 123.65,
+        "awayScore": 111.2,
+        "homeScoreApi": 123.65,
+        "awayScoreApi": 111.2,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 16,
+        "homeTeamId": 5,
+        "awayTeamId": 6,
+        "homeScore": 119.35,
+        "awayScore": 96.9,
+        "homeScoreApi": 119.35,
+        "awayScoreApi": 96.9,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 16,
+        "homeTeamId": 7,
+        "awayTeamId": 8,
+        "homeScore": 129.2,
+        "awayScore": 142.1,
+        "homeScoreApi": 129.2,
+        "awayScoreApi": 142.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "17": [
+      {
+        "week": 17,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 159.15,
+        "awayScore": 121.55,
+        "homeScoreApi": 159.15,
+        "awayScoreApi": 121.55,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 17,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 136.9,
+        "awayScore": 98.85,
+        "homeScoreApi": 136.9,
+        "awayScoreApi": 98.85,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 17,
+        "homeTeamId": 5,
+        "awayTeamId": 8,
+        "homeScore": 115.1,
+        "awayScore": 138.85,
+        "homeScoreApi": 115.1,
+        "awayScoreApi": 138.85,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 17,
+        "homeTeamId": 6,
+        "awayTeamId": 7,
+        "homeScore": 90.35,
+        "awayScore": 147.95,
+        "homeScoreApi": 90.35,
+        "awayScoreApi": 147.95,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ],
+    "18": [
+      {
+        "week": 18,
+        "homeTeamId": 1,
+        "awayTeamId": 2,
+        "homeScore": 116.65,
+        "awayScore": 138.25,
+        "homeScoreApi": 116.65,
+        "awayScoreApi": 138.25,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 18,
+        "homeTeamId": 3,
+        "awayTeamId": 4,
+        "homeScore": 95.4,
+        "awayScore": 88.65,
+        "homeScoreApi": 95.4,
+        "awayScoreApi": 88.65,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 18,
+        "homeTeamId": 5,
+        "awayTeamId": 8,
+        "homeScore": 163.2,
+        "awayScore": 153.1,
+        "homeScoreApi": 163.2,
+        "awayScoreApi": 153.1,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      },
+      {
+        "week": 18,
+        "homeTeamId": 6,
+        "awayTeamId": 7,
+        "homeScore": 116.3,
+        "awayScore": 141.4,
+        "homeScoreApi": 116.3,
+        "awayScoreApi": 141.4,
+        "isBye": false,
+        "homeLineup": [],
+        "awayLineup": []
+      }
+    ]
+  },
+  "powerRankings": {},
+  "trades": []
+}
