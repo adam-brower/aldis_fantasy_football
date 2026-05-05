@@ -29,7 +29,10 @@ body {
   font-family: var(--font-body);
   min-height: 100vh;
   overflow-x: hidden;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
 }
+html { -webkit-text-size-adjust: 100%; }
 
 /* ── Header ────────────────────────────────────── */
 header {
@@ -959,6 +962,115 @@ td.std-cell { text-align: left; }
 .compare-stat-row .val { font-family: var(--font-mono); }
 .compare-stat-row .val.win { color: var(--win); }
 
+/* ── Compare table (new layout): values flank a centered label ─────────── */
+.cmp-table {
+  background: var(--bg3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: .75rem 1rem;
+  overflow: hidden;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.cmp-header {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .75rem;
+  padding-bottom: .85rem;
+  margin-bottom: .35rem;
+  border-bottom: 1px solid var(--border);
+}
+.cmp-team { min-width: 0; }
+.cmp-team.left  { text-align: left; }
+.cmp-team.right { text-align: right; }
+.cmp-team-name {
+  font-weight: 700;
+  font-size: 1rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.cmp-vs {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  letter-spacing: 2px;
+  color: var(--text3);
+  padding: 0 .75rem;
+}
+.cmp-row {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: .75rem;
+  padding: .55rem 0;
+  border-bottom: 1px solid rgba(30,39,51,.6);
+}
+.cmp-row:last-child { border-bottom: none; }
+.cmp-val {
+  font-family: var(--font-mono);
+  font-size: .95rem;
+  color: var(--text);
+}
+.cmp-val.left  { text-align: left;  }
+.cmp-val.right { text-align: right; }
+.cmp-val.win   { color: var(--win); font-weight: 700; }
+.cmp-lbl {
+  font-family: var(--font-mono);
+  font-size: .68rem;
+  color: var(--text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  text-align: center;
+  white-space: nowrap;
+  padding: 0 .5rem;
+}
+
+.cmp-history {
+  margin-top: .85rem;
+  padding: .75rem 1rem;
+  background: var(--bg2);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.cmp-history-label {
+  font-family: var(--font-mono);
+  font-size: .65rem;
+  color: var(--text3);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  margin-bottom: .5rem;
+}
+.cmp-history-row {
+  display: grid;
+  grid-template-columns: auto 1fr auto 1fr;
+  align-items: center;
+  gap: .5rem;
+  padding: .25rem 0;
+  font-size: .82rem;
+}
+.cmp-history-week {
+  font-family: var(--font-mono);
+  font-size: .7rem;
+  color: var(--text2);
+  letter-spacing: .5px;
+}
+.cmp-history-score { font-family: var(--font-mono); text-align: center; }
+.cmp-history-score.win { color: var(--win); font-weight: 700; }
+.cmp-history-vs { color: var(--text3); font-family: var(--font-mono); text-align: center; }
+
+/* Karma expandable detail card (replaces the old inline styles) */
+.karma-detail {
+  background: var(--bg3);
+  border-radius: 6px;
+  padding: .6rem .8rem;
+  margin: 0 0 .6rem 2.5rem;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
 /* ── Chart wrapper ─────────────────────────────── */
 .chart-wrap {
   position: relative;
@@ -1006,10 +1118,34 @@ td.std-cell { text-align: left; }
   nav::-webkit-scrollbar { display: none; }
   .nav-link { padding: 0 .75rem; font-size: .7rem; height: 40px; }
 
-  main { padding: 1rem .75rem; max-width: 100%; }
+  main { padding: 1rem .75rem 4rem .75rem; max-width: 100%; }
   section.page-section { margin-bottom: 2rem; }
   .page-title { font-size: 1.4rem; letter-spacing: 2px; }
-  .card { padding: 1rem .85rem; }
+  .card { padding: 1rem .85rem; max-width: 100%; box-sizing: border-box; overflow-x: hidden; }
+  /* Force ALL grid-2 / grid-3 / grid-4 to single column on tablet+phone */
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr !important; gap: 1rem; }
+  /* All-time grids inside #app-alltime → single column too */
+  #app-alltime .grid-2,
+  #app-alltime .grid-3 { grid-template-columns: 1fr !important; }
+  /* Karma detail dropdown: kill the huge left margin so it fits */
+  .karma-detail { margin-left: 0 !important; max-width: 100%; box-sizing: border-box; }
+
+  /* Bracket: cap container widths so cards never overflow the viewport */
+  .bracket-grid, .bracket-card, .bracket-tournament,
+  .bracket-third, .bracket-rounds, .bracket-rd, .bracket-game {
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+  /* Compress bracket geometry so the boxes themselves fit inside the card */
+  .bracket-tournament {
+    --bracket-gap: 1.6rem;
+    --bracket-stub: 14px;
+    grid-template-columns: minmax(0, 1fr) calc(var(--bracket-stub) * 2) minmax(0, 1fr);
+  }
+  .bracket-name { font-size: .65rem; }
+  .bracket-score { font-size: .7rem; }
+  .bracket-seed { font-size: .55rem; }
+  .bracket-team { padding: .35rem .45rem; gap: .35rem; }
 
   /* Tables: NO scroll — JS auto-scaler shrinks tables to container width */
   .table-wrap {
@@ -1064,6 +1200,36 @@ td.std-cell { text-align: left; }
   /* Power rankings items */
   .pr-bar-wrap { width: 80px; }
   .pr-rank { font-size: 1.4rem; width: 2rem; }
+}
+
+/* ─────────────────────────────────────────────────────────────────────────
+   RIGID-MOBILE LOCKDOWN  (≤768px — covers all phones + small tablets)
+   The iOS-Safari-proof pattern: lock <html> to viewport size and disable
+   ALL touch gestures + scroll on it; let <body> become the only scroll
+   container, and ONLY on the vertical axis. This is the standard pattern
+   that defeats iOS Safari's pinch-zoom, double-tap-zoom AND its rubber-band
+   horizontal scroll all at once. The gestureXX/touchmove JS guards in
+   index.html are the second line of defense (iOS ignores user-scalable=no
+   in the meta tag since iOS 10).
+   ───────────────────────────────────────────────────────────────────── */
+@media (max-width: 768px) {
+  html {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;          /* nothing on <html> ever scrolls */
+    touch-action: none;        /* <html> ignores ALL touch gestures */
+    overscroll-behavior: none;
+  }
+  body {
+    width: 100%;
+    height: 100%;
+    overflow-y: auto;          /* body is the ONLY scroll container */
+    overflow-x: hidden;
+    touch-action: pan-y;       /* ONLY vertical pan; blocks pinch + horizontal */
+    overscroll-behavior: none; /* no rubber-band */
+    -webkit-overflow-scrolling: touch;
+    margin: 0;
+  }
 }
 
 /* ── Responsive: iPhone Pro / Pro Max (≤430px) ── */
@@ -1180,7 +1346,7 @@ td.std-cell { text-align: left; }
 
   /* Bracket — keep proper bracket layout on mobile, just shrink it */
   .bracket-tournament {
-    grid-template-columns: 1fr calc(var(--bracket-stub) * 2) 1fr;
+    grid-template-columns: minmax(0, 1fr) calc(var(--bracket-stub) * 2) minmax(0, 1fr);
     --bracket-gap: 1.5rem;
     --bracket-stub: 14px;
     --bracket-line-w: 1px;
@@ -1243,6 +1409,15 @@ td.std-cell { text-align: left; }
   .compare-bar { flex-direction: column; align-items: stretch; gap: .5rem; }
   .compare-bar select { min-width: auto; width: 100%; }
   .compare-grid { grid-template-columns: 1fr !important; }
+  /* New compare table layout — fit on phone */
+  .cmp-table { padding: .65rem .7rem; }
+  .cmp-team-name { font-size: .8rem; }
+  .cmp-vs { font-size: 1rem; padding: 0 .35rem; letter-spacing: 1px; }
+  .cmp-val { font-size: .78rem; }
+  .cmp-lbl { font-size: .55rem; letter-spacing: .8px; padding: 0 .25rem; }
+  .cmp-row { padding: .45rem 0; gap: .35rem; }
+  .cmp-history { padding: .55rem .65rem; }
+  .cmp-history-row { font-size: .72rem; gap: .35rem; }
 
   /* Info icon tooltip */
   .info-icon { font-size: .62rem; width: 16px; height: 16px; }

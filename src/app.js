@@ -1521,77 +1521,81 @@ function renderCompareResult() {
     });
   });
 
-  const cmp = (av, bv, fmt) => {
+  // 3-column row: [Team A value] | [Center Label] | [Team B value]
+  const cmpRow = (av, bv, fmt) => {
     const aWin = av > bv, bWin = bv > av;
-    return `<div class="compare-stat-row">
-      <span class="lbl">${fmt.lbl}</span>
-      <span style="display:flex;gap:1rem">
-        <span class="val ${aWin ? 'win' : ''}">${fmt.fa(av)}</span>
-        <span style="color:var(--text3)">vs</span>
-        <span class="val ${bWin ? 'win' : ''}">${fmt.fb(bv)}</span>
-      </span>
+    return `<div class="cmp-row">
+      <div class="cmp-val left ${aWin ? 'win' : ''}">${fmt.fa(av)}</div>
+      <div class="cmp-lbl">${fmt.lbl}</div>
+      <div class="cmp-val right ${bWin ? 'win' : ''}">${fmt.fb(bv)}</div>
     </div>`;
   };
 
-  // Combined record (W-L) string vs. comparable raw value for highlighting
   const recordRow = (() => {
     const aRec = `${sA.wins}-${sA.losses}`;
     const bRec = `${sB.wins}-${sB.losses}`;
     const aWin = sA.wins > sB.wins, bWin = sB.wins > sA.wins;
-    return `<div class="compare-stat-row">
-      <span class="lbl">Record</span>
-      <span style="display:flex;gap:1rem">
-        <span class="val ${aWin ? 'win' : ''}">${aRec}</span>
-        <span style="color:var(--text3)">vs</span>
-        <span class="val ${bWin ? 'win' : ''}">${bRec}</span>
-      </span>
+    return `<div class="cmp-row">
+      <div class="cmp-val left ${aWin ? 'win' : ''}">${aRec}</div>
+      <div class="cmp-lbl">Record</div>
+      <div class="cmp-val right ${bWin ? 'win' : ''}">${bRec}</div>
+    </div>`;
+  })();
+
+  const directRow = (() => {
+    if (!realMatchups.length) {
+      return `<div class="cmp-row">
+        <div class="cmp-val left" style="color:var(--text3)">—</div>
+        <div class="cmp-lbl">Direct Matchups</div>
+        <div class="cmp-val right" style="color:var(--text3)">—</div>
+      </div>`;
+    }
+    const aWin = aActualW > bActualW, bWin = bActualW > aActualW;
+    return `<div class="cmp-row">
+      <div class="cmp-val left ${aWin ? 'win' : ''}">${aActualW}-${bActualW}${ties ? '-'+ties : ''}</div>
+      <div class="cmp-lbl">Direct Matchups</div>
+      <div class="cmp-val right ${bWin ? 'win' : ''}">${bActualW}-${aActualW}${ties ? '-'+ties : ''}</div>
     </div>`;
   })();
 
   const rows = recordRow + [
-    cmp(sA.totalPts,     sB.totalPts,     { lbl:'Total PF',           fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
-    cmp(sA.avgPts,       sB.avgPts,       { lbl:'Avg / Week',         fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
-    cmp(sA.xW,           sB.xW,           { lbl:'Expected Wins (xW)', fa:v=>v.toFixed(3), fb:v=>v.toFixed(3) }),
-    cmp(sA.wins - sA.xW, sB.wins - sB.xW, { lbl:'W − xW',             fa:v=>(v>0?'+':'')+v.toFixed(3), fb:v=>(v>0?'+':'')+v.toFixed(3) }),
-    cmp(aAllPlayW,       bAllPlayW,       { lbl:'All-Play Wins',      fa:v=>v, fb:v=>v }),
-  ].join('');
-
-  const real = realMatchups.length
-    ? `<div class="compare-stat-row">
-        <span class="lbl">Direct Matchups</span>
-        <span class="val">${aActualW}–${bActualW}${ties ? '–'+ties : ''}</span>
-      </div>`
-    : `<div class="compare-stat-row">
-        <span class="lbl">Direct Matchups</span>
-        <span class="val" style="color:var(--text3)">none played</span>
-      </div>`;
+    cmpRow(sA.totalPts,     sB.totalPts,     { lbl:'Total PF',           fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
+    cmpRow(sA.avgPts,       sB.avgPts,       { lbl:'Avg / Week',         fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
+    cmpRow(sA.xW,           sB.xW,           { lbl:'Expected Wins (xW)', fa:v=>v.toFixed(3), fb:v=>v.toFixed(3) }),
+    cmpRow(sA.wins - sA.xW, sB.wins - sB.xW, { lbl:'W − xW',             fa:v=>(v>0?'+':'')+v.toFixed(3), fb:v=>(v>0?'+':'')+v.toFixed(3) }),
+    cmpRow(aAllPlayW,       bAllPlayW,       { lbl:'All-Play Wins',      fa:v=>v, fb:v=>v }),
+  ].join('') + directRow;
 
   const realDetail = realMatchups.length
-    ? `<div style="margin-top:.5rem;font-size:.75rem;color:var(--text2)">` +
-        realMatchups.map(m => {
+    ? `<div class="cmp-history">
+        <div class="cmp-history-label">Direct Matchup History</div>
+        ${realMatchups.map(m => {
           const aw = m.aScore > m.bScore;
-          return `Wk ${m.week}: <span class="${aw?'positive':'negative'}">${m.aScore.toFixed(2)}</span> – <span class="${aw?'negative':'positive'}">${m.bScore.toFixed(2)}</span>`;
-        }).join(' &nbsp;|&nbsp; ') +
-      `</div>`
+          return `<div class="cmp-history-row">
+            <span class="cmp-history-week">Wk ${m.week}</span>
+            <span class="cmp-history-score ${aw?'win':''}">${m.aScore.toFixed(2)}</span>
+            <span class="cmp-history-vs">–</span>
+            <span class="cmp-history-score ${!aw?'win':''}">${m.bScore.toFixed(2)}</span>
+          </div>`;
+        }).join('')}
+      </div>`
     : '';
 
+  // Single table — header row with team names ONLY (no manager), then comparison rows
   target.innerHTML = `
-    <div class="compare-grid">
-      <div class="compare-side">
-        <div class="team-name" style="font-size:1rem;color:var(--accent)">${esc(tA.name)}</div>
-        <div class="owner-name" style="margin-bottom:.75rem">${esc(ownerStr(tA))}</div>
+    <div class="cmp-table">
+      <div class="cmp-header">
+        <div class="cmp-team left">
+          <div class="cmp-team-name" style="color:var(--accent)">${esc(tA.name)}</div>
+        </div>
+        <div class="cmp-vs">VS</div>
+        <div class="cmp-team right">
+          <div class="cmp-team-name" style="color:var(--accent2)">${esc(tB.name)}</div>
+        </div>
       </div>
-      <div class="vs-divider compare-vs">VS</div>
-      <div class="compare-side">
-        <div class="team-name" style="font-size:1rem;color:var(--accent2)">${esc(tB.name)}</div>
-        <div class="owner-name" style="margin-bottom:.75rem">${esc(ownerStr(tB))}</div>
-      </div>
-    </div>
-    <div class="card section-gap" style="background:var(--bg3)">
       ${rows}
-      ${real}
-      ${realDetail}
     </div>
+    ${realDetail}
   `;
 }
 
@@ -1780,8 +1784,8 @@ function renderPowerRankings() {
         <div style="font-family:var(--font-mono);font-size:.65rem;color:var(--text3)">${(perGame>0?'+':'')}${perGame.toFixed(2)}/game</div>
       </div>
     </div>
-    <div class="karma-detail" data-tid="${l.team.id}" style="display:none;background:var(--bg3);border-radius:6px;padding:.6rem .8rem;margin:0 0 .6rem 2.5rem">
-      <table style="width:100%;font-size:.78rem">
+    <div class="karma-detail" data-tid="${l.team.id}" style="display:none">
+      <div class="table-wrap"><table style="width:100%;font-size:.78rem">
         <thead>
           <tr style="color:var(--text3)">
             <th style="text-align:left">Wk</th>
@@ -1794,7 +1798,7 @@ function renderPowerRankings() {
           </tr>
         </thead>
         <tbody>${weekRows}</tbody>
-      </table>
+      </table></div>
     </div>`;
   }).join('');
 
