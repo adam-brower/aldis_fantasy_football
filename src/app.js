@@ -578,7 +578,7 @@ async function bootAllTime(seasons) {
   const ownerArr = Object.entries(ownerStats).sort((a,b) => b[1].totalWins - a[1].totalWins);
   document.getElementById('alltime-season-records').innerHTML = `
     <div class="card-title">Career Leaderboard</div>
-    <table style="width:100%;border-collapse:collapse;font-size:.82rem">
+    <div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:.82rem">
       <thead><tr style="border-bottom:1px solid var(--border);color:var(--text3);font-size:.7rem;text-transform:uppercase;letter-spacing:1px">
         <th style="text-align:left;padding:.4rem">Owner</th>
         <th>Seasons</th><th>W</th><th>L</th><th>W%</th><th>Total PF</th><th>🏆</th>
@@ -595,7 +595,7 @@ async function bootAllTime(seasons) {
           <td class="center">${s.championships > 0 ? '🏆'.repeat(s.championships) : '—'}</td>
         </tr>`;
       }).join('')}</tbody>
-    </table>
+    </table></div>
     <div style="margin-top:1rem;font-size:.72rem;color:var(--text3)">
       <strong>Highest Scoring Season:</strong> ${ownerSeasonPF[0]?.owner} — ${ownerSeasonPF[0]?.pf.toFixed(2)} PF (${ownerSeasonPF[0]?.season}–${String((ownerSeasonPF[0]?.season??0)+1).slice(2)}, "${ownerSeasonPF[0]?.team}")
     </div>`;
@@ -722,7 +722,7 @@ async function bootAllTime(seasons) {
         <div>Total PF: <strong>${totalPFA.toFixed(2)}</strong> vs <strong>${totalPFB.toFixed(2)}</strong></div>
         <div>Games Played: <strong>${games.length}</strong></div>
       </div>
-      ${games.length ? `<table style="width:100%;border-collapse:collapse;font-size:.78rem">
+      ${games.length ? `<div class="table-wrap"><table style="width:100%;border-collapse:collapse;font-size:.78rem">
         <thead><tr style="border-bottom:1px solid var(--border);color:var(--text3);font-size:.65rem;text-transform:uppercase;letter-spacing:1px">
           <th style="text-align:left;padding:.3rem">Season</th><th>Week</th><th>${esc(a)}</th><th>${esc(b)}</th><th>Winner</th>
         </tr></thead>
@@ -738,7 +738,7 @@ async function bootAllTime(seasons) {
             <td class="center" style="font-weight:600">${esc(winner)}</td>
           </tr>`;
         }).join('')}</tbody>
-      </table>` : `<div style="text-align:center;color:var(--text3);padding:1rem">No matchups found between these owners.</div>`}
+      </table></div>` : `<div style="text-align:center;color:var(--text3);padding:1rem">No matchups found between these owners.</div>`}
     `;
   };
   document.getElementById('alltime-h2h-a').addEventListener('change', renderAlltimeH2H);
@@ -1769,9 +1769,8 @@ function renderPowerRankings() {
     return `<div class="pr-item karma-row" data-tid="${l.team.id}" style="cursor:pointer">
       <div class="pr-rank" style="font-size:1rem;color:var(--text3)">${i+1}</div>
       <div class="pr-info">
-        <div class="pr-name">${esc(l.team.name)}${tagHTML} <span style="font-size:.6rem;color:var(--text3)">▼</span></div>
+        <div class="pr-name">${esc(l.team.name)}${tagHTML} <span style="font-size:.4rem;color:var(--text3)">▼</span></div>
         <div class="pr-owner">
-          <span class="karma-mgr-name">${esc(ownerStr(l.team))} · </span>
           <span class="positive">${l.luckyWins} lucky W</span> ·
           <span class="negative">${l.heartbreakers} heartbreak L</span>
         </div>
