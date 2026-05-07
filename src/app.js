@@ -634,13 +634,13 @@ async function bootAllTime(seasons) {
       <div>
         <div class="card-title" style="font-size:.75rem">Biggest Blowouts</div>
         <ol style="padding-left:1.2rem;font-size:.78rem;line-height:1.8">
-          ${blowouts.map(b => `<li><strong>${b.margin.toFixed(2)}</strong> — ${esc(b.winner)} (${b.winScore.toFixed(2)}) def. ${esc(b.loser)} (${b.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${b.weekLabel ?? 'Wk '+b.week}, ${b.season}–${String(b.season+1).slice(2)})</span></li>`).join('')}
+          ${blowouts.map(b => `<li><strong>${b.margin.toFixed(2)}</strong> — ${esc(firstName(b.winner))} (${b.winScore.toFixed(2)}) vs ${esc(firstName(b.loser))} (${b.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${b.weekLabel ?? 'Wk '+b.week}, ${b.season}–${String(b.season+1).slice(2)})</span></li>`).join('')}
         </ol>
       </div>
       <div>
         <div class="card-title" style="font-size:.75rem">Closest Games</div>
         <ol style="padding-left:1.2rem;font-size:.78rem;line-height:1.8">
-          ${closestGames.map(g => `<li><strong>${g.margin.toFixed(2)}</strong> — ${esc(g.winner)} (${g.winScore.toFixed(2)}) over ${esc(g.loser)} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
+          ${closestGames.map(g => `<li><strong>${g.margin.toFixed(2)}</strong> — ${esc(firstName(g.winner))} (${g.winScore.toFixed(2)}) over ${esc(firstName(g.loser))} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
         </ol>
       </div>
     </div>
@@ -648,13 +648,13 @@ async function bootAllTime(seasons) {
       <div>
         <div class="card-title" style="font-size:.75rem">Highest Combined Score</div>
         <ol style="padding-left:1.2rem;font-size:.78rem;line-height:1.8">
-          ${highestCombined.map(g => `<li><strong>${g.combined.toFixed(2)}</strong> — ${esc(g.winner)} (${g.winScore.toFixed(2)}) vs ${esc(g.loser)} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
+          ${highestCombined.map(g => `<li><strong>${g.combined.toFixed(2)}</strong> — ${esc(firstName(g.winner))} (${g.winScore.toFixed(2)}) vs ${esc(firstName(g.loser))} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
         </ol>
       </div>
       <div>
         <div class="card-title" style="font-size:.75rem">Lowest Combined Score</div>
         <ol style="padding-left:1.2rem;font-size:.78rem;line-height:1.8">
-          ${lowestCombined.map(g => `<li><strong>${g.combined.toFixed(2)}</strong> — ${esc(g.winner)} (${g.winScore.toFixed(2)}) vs ${esc(g.loser)} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
+          ${lowestCombined.map(g => `<li><strong>${g.combined.toFixed(2)}</strong> — ${esc(firstName(g.winner))} (${g.winScore.toFixed(2)}) vs ${esc(firstName(g.loser))} (${g.loseScore.toFixed(2)}) <span style="color:var(--text3)">(${g.weekLabel ?? 'Wk '+g.week}, ${g.season}–${String(g.season+1).slice(2)})</span></li>`).join('')}
         </ol>
       </div>
     </div>
@@ -1870,13 +1870,13 @@ function renderXWChart() {
       scales: {
         x: {
           grid: { color: 'rgba(30,39,51,.4)' },
-          ticks: { color: '#7a8a9e', font: { family: 'DM Mono' } }
+          ticks: { color: '#7a8a9e', font: { family: 'DM Mono', size: _isMobile() ? 9 : 12 } }
         },
         y: {
           beginAtZero: true,
           grid: { color: 'rgba(30,39,51,.4)' },
-          ticks: { color: '#7a8a9e', font: { family: 'DM Mono' } },
-          title: { display: true, text: 'Cumulative Scaled xW', color: '#7a8a9e' }
+          ticks: { color: '#7a8a9e', font: { family: 'DM Mono', size: _isMobile() ? 9 : 12 } },
+          title: { display: true, text: 'Cumulative Scaled xW', color: '#7a8a9e', font: { size: _isMobile() ? 10 : 12 } }
         }
       }
     }
@@ -1958,14 +1958,14 @@ function renderESPNPowerChart() {
         }
       },
       scales: {
-        x: { grid: { color: 'rgba(30,39,51,.4)' }, ticks: { color: '#7a8a9e', font: { family: 'DM Mono' } } },
+        x: { grid: { color: 'rgba(30,39,51,.4)' }, ticks: { color: '#7a8a9e', font: { family: 'DM Mono', size: _isMobile() ? 9 : 12 } } },
         y: {
           reverse: true,           // rank 1 at top
           beginAtZero: false,
           min: 1,
           max: teams.length,
-          ticks: { color: '#7a8a9e', font: { family: 'DM Mono' }, stepSize: 1 },
-          title: { display: true, text: 'ESPN Rank (1 = best)', color: '#7a8a9e' }
+          ticks: { color: '#7a8a9e', font: { family: 'DM Mono', size: _isMobile() ? 9 : 12 }, stepSize: 1 },
+          title: { display: true, text: 'ESPN Rank (1 = best)', color: '#7a8a9e', font: { size: _isMobile() ? 10 : 12 } }
         }
       }
     }
@@ -2032,6 +2032,14 @@ function ownerStr(t) {
   return String(o);
 }
 function shortName(t) { return ownerStr(t).split(' ')[0]; }
+/** Return only the first name from a full-name string ("Adam Brower" → "Adam") */
+function firstName(name) {
+  if (!name) return '';
+  return String(name).trim().split(/\s+/)[0];
+}
+function _isMobile() {
+  return typeof window !== 'undefined' && window.matchMedia && window.matchMedia('(max-width: 768px)').matches;
+}
 
 // ── Playoff Bracket ─────────────────────────────────────────────────────────
 let _bracketShowPredicted = false;
@@ -2208,6 +2216,9 @@ function renderTradeCard(tr, idx, teamById) {
   if (!isTouchOrSmall()) return;
 
   function scaleTable(wrap) {
+    // Skip wraps that have opted out of auto-scaling (e.g. karma-detail
+    // tables which use horizontal scrolling instead).
+    if (wrap.closest('.karma-detail')) return;
     const table = wrap.querySelector('table');
     if (!table) return;
 

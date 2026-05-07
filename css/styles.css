@@ -359,17 +359,17 @@ td.std-cell { text-align: left; }
   background: var(--bg3);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.25rem;
+  padding: .85rem 1rem;        /* tighter — less empty space */
   display: flex;
   flex-direction: column;
-  gap: .75rem;
+  gap: .4rem;
 }
 
 /* HORIZONTAL layout: team1 (name+score) | VS | team2 (name+score) */
 .matchup-h {
   display: grid;
   grid-template-columns: 1fr auto 1fr;
-  gap: .75rem;
+  gap: .65rem;
   align-items: center;
 }
 .matchup-side { min-width: 0; display: flex; flex-direction: column; gap: .25rem; }
@@ -1127,8 +1127,27 @@ td.std-cell { text-align: left; }
   /* All-time grids inside #app-alltime → single column too */
   #app-alltime .grid-2,
   #app-alltime .grid-3 { grid-template-columns: 1fr !important; }
-  /* Karma detail dropdown: kill the huge left margin so it fits */
-  .karma-detail { margin-left: 0 !important; max-width: 100%; box-sizing: border-box; }
+  /* Karma detail dropdown: kill the huge left margin so it fits.
+     Allow horizontal scroll INSIDE the karma detail (and only there) since
+     the breakdown table has too many columns to shrink-fit on a phone. */
+  .karma-detail {
+    margin-left: 0 !important;
+    max-width: 100%;
+    box-sizing: border-box;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;       /* allow both axes here only */
+  }
+  .karma-detail .table-wrap {
+    overflow-x: auto !important;     /* opt this wrap OUT of JS-shrink */
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+  }
+  /* Mark karma-detail tables so the JS scaler can skip them — done via
+     the `.no-scale` class added below in JS. As a CSS fallback we also
+     leave the table at its natural width. */
+  .karma-detail table { width: max-content; min-width: 100%; }
 
   /* Bracket: cap container widths so cards never overflow the viewport */
   .bracket-grid, .bracket-card, .bracket-tournament,
@@ -1204,32 +1223,23 @@ td.std-cell { text-align: left; }
 
 /* ─────────────────────────────────────────────────────────────────────────
    RIGID-MOBILE LOCKDOWN  (≤768px — covers all phones + small tablets)
-   The iOS-Safari-proof pattern: lock <html> to viewport size and disable
-   ALL touch gestures + scroll on it; let <body> become the only scroll
-   container, and ONLY on the vertical axis. This is the standard pattern
-   that defeats iOS Safari's pinch-zoom, double-tap-zoom AND its rubber-band
-   horizontal scroll all at once. The gestureXX/touchmove JS guards in
-   index.html are the second line of defense (iOS ignores user-scalable=no
-   in the meta tag since iOS 10).
+   Block horizontal scroll, pinch-zoom, double-tap-zoom and rubber-band
+   without breaking the sticky header. We DON'T turn <body> into a separate
+   scroll container — that breaks `position: sticky` on the header in iOS.
+   Instead: rely on touch-action + overflow-x: hidden + the JS gesture
+   handlers in index.html (which are iOS Safari's only way to actually
+   block pinch-zoom since iOS 10).
    ───────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  html {
+  html, body {
     width: 100%;
-    height: 100%;
-    overflow: hidden;          /* nothing on <html> ever scrolls */
-    touch-action: none;        /* <html> ignores ALL touch gestures */
-    overscroll-behavior: none;
-  }
-  body {
-    width: 100%;
-    height: 100%;
-    overflow-y: auto;          /* body is the ONLY scroll container */
+    max-width: 100vw;
     overflow-x: hidden;
     touch-action: pan-y;       /* ONLY vertical pan; blocks pinch + horizontal */
     overscroll-behavior: none; /* no rubber-band */
-    -webkit-overflow-scrolling: touch;
-    margin: 0;
+    -webkit-text-size-adjust: 100%;
   }
+  body { margin: 0; }
 }
 
 /* ── Responsive: iPhone Pro / Pro Max (≤430px) ── */
@@ -1421,10 +1431,33 @@ td.std-cell { text-align: left; }
 
   /* Info icon tooltip */
   .info-icon { font-size: .62rem; width: 16px; height: 16px; }
-  .info-icon::after { left: auto; right: 0; transform: none; max-width: calc(100vw - 2rem); font-size: .68rem; padding: .55rem .65rem; }
+  /* Center info-icon tooltip in the viewport so it never overflows the screen */
+  .info-icon::after {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translate(-50%, -50%);
+    max-width: calc(100vw - 2rem);
+    width: max-content;
+    font-size: .72rem;
+    padding: .8rem .9rem;
+    line-height: 1.5;
+  }
 
-  /* Info blurb — prevent off-screen overflow */
-  .info-blurb { font-size: .7rem; padding: .55rem .65rem; line-height: 1.5; word-break: break-word; overflow-wrap: break-word; }
+  /* Info blurb — prevent off-screen overflow + center on mobile */
+  .info-blurb {
+    font-size: .7rem;
+    padding: .55rem .65rem;
+    line-height: 1.5;
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100vw - 1.4rem);
+  }
 
   /* Toggle rows */
   .toggle-row { gap: .4rem; }
