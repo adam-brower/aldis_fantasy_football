@@ -1,10 +1,11 @@
 name: Update League Data
 
 on:
-  # Run every Tuesday at 8 AM UTC (during season, after Monday Night Football)
+  # Run every Tuesday at 8 AM UTC (during season, after Monday Night Football),
+  # but ONLY during fantasy season — months 9, 10, 11, 12 (Sep–Dec) and 1, 2 (Jan–Feb).
   schedule:
-    - cron: '0 8 * * 2'
-  # Allow manual trigger from GitHub UI
+    - cron: '0 8 * 9-12,1-2 2'
+  # Allow manual trigger from GitHub UI (works year-round, regardless of month)
   workflow_dispatch:
     inputs:
       year:
@@ -31,18 +32,23 @@ jobs:
       - name: Fetch latest league data
         env:
           ESPN_S2: ${{ secrets.ESPN_S2 }}
-          SWID: ${{ secrets.SWID }}
+          SWID:    ${{ secrets.SWID }}
+          # YEAR comes from the repo secret. If you trigger the workflow
+          # manually with a `year` input, that overrides the secret.
+          YEAR:    ${{ github.event.inputs.year != '' && github.event.inputs.year || secrets.YEAR }}
         run: |
-          if [ -n "${{ github.event.inputs.year }}" ]; then
-            python fetch.py --year ${{ github.event.inputs.year }}
-          else
-            python fetch.py
+          if [ -z "$YEAR" ]; then
+            echo "::error::YEAR is not set. Add it as a repo secret (Settings → Secrets and variables → Actions → New repository secret), or pass it as a manual input."
+            exit 1
           fi
+          python fetch.py
 
       - name: Commit and push if data changed
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
           git add data/ data.json
-          git diff --cached --quiet || git commit -m "Update league data [auto]"
+          # Include the run date (UTC) in the commit message
+          COMMIT_DATE=$(date -u +"%Y-%m-%d %H:%M UTC")
+          git diff --cached --quiet || git commit -m "Update league data [auto] — $COMMIT_DATE"
           git push

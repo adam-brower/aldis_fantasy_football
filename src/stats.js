@@ -415,15 +415,18 @@ export function computeWeeklyExtremes(weeklyScores, biweeklyScores, teams, compl
     lowBiweek[team.id] = 0;
   }
 
-  // Single-week extremes — iterate weekGroups (combined groups count as 1 game)
-  const groups = (weekGroups && weekGroups.length)
-    ? weekGroups
-    : completedWeeks.map(w => ({ canonicalWeek: w, weeks: [w], combined: false }));
+  // Single-week extremes — iterate EVERY individual played week, not the
+  // groups. Even when the playoff round is grouped (e.g. Wks 16-17 combined
+  // for stats purposes), each individual week still counts toward the
+  // single-week hi/lo tally because each one is a real, separately-scored week.
+  const singleWeeks = (allWeeks && allWeeks.length)
+    ? allWeeks
+    : completedWeeks;
 
-  for (const group of groups) {
+  for (const week of singleWeeks) {
     const scores = teams.map(team => ({
       id: team.id,
-      score: group.weeks.reduce((sum, week) => sum + (weeklyScores[team.id]?.[week] ?? 0), 0),
+      score: weeklyScores[team.id]?.[week] ?? 0,
     }));
 
     const nonZeroScores = scores.filter(s => s.score > 0);

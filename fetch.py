@@ -59,7 +59,7 @@ POS_NAME_TO_ID = {name: pid for pid, name in POSITION_MAP.items()}
 #   4. Update below AND in GitHub repo Settings → Secrets → Actions
 
 LEAGUE_ID = 12705243
-YEAR      = int(os.environ.get("YEAR", 2025))
+YEAR      = int(os.environ.get("YEAR"))
 ESPN_S2   = os.environ.get("ESPN_S2")
 SWID      = os.environ.get("SWID")
 

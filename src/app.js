@@ -778,7 +778,7 @@ async function bootAllTime(seasons) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('app').style.display = 'none';
   document.getElementById('app-alltime').style.display = 'block';
-  document.title = "Aldi's FF League · All-Time";
+  document.title = "Aldi's Fantasy Football · All-Time";
   setStatus('live', 'All-Time Records');
 }
 
@@ -956,7 +956,7 @@ function renderWeeklyScores() {
   const thead = document.getElementById('scores-thead');
   thead.innerHTML = `<th style="text-align:center"></th>` +
     teams.map(t => `<th class="center" title="${esc(ownerStr(t))}" style="max-width:7rem;word-wrap:break-word;overflow-wrap:break-word">
-      <div style="font-weight:600;font-size:.78rem;color:var(--text);text-transform:none;letter-spacing:.5px;white-space:normal;word-break:break-word">${esc(t.name)}</div>
+      <div style="font-weight:600;font-size:.74rem;color:var(--text);text-transform:none;letter-spacing:.5px;white-space:normal;word-break:break-word">${esc(t.name)}</div>
       <div style="font-weight:400;font-size:.62rem;color:var(--text3);text-transform:none;letter-spacing:.3px;margin-top:.15rem;white-space:normal;word-break:break-word">${esc(ownerStr(t))}</div>
     </th>`).join('');
 

@@ -9,7 +9,8 @@
   <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Mono:wght@400;500&family=DM+Sans:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
   <link rel="stylesheet" id="app-css" />
-  <!-- <link rel="icon" href="./assets/favicon.png" type="image/png" /> -->
+  <link rel="icon" type="image/png" href="./assets/favicon.png" />
+  <link rel="apple-touch-icon" href="./assets/favicon.png" />
 </head>
 <body>
 <script>
@@ -28,11 +29,34 @@
   document.addEventListener('touchmove', (e) => {
     if (e.touches.length > 1) e.preventDefault();
   }, { passive: false });
+
+  // ── Info-icon tooltip dynamic positioning ───────────────────────────────
+  // On mobile, CSS positions the tooltip with position: fixed at left: 50%
+  // (viewport-centered horizontally). The vertical position is controlled
+  // by a CSS variable --tip-top, which we set here to the icon's bottom Y
+  // each time the user hovers/taps an info icon — so the tooltip appears
+  // just below the icon while still being centered on the viewport.
+  function _positionInfoTip(icon) {
+    const r = icon.getBoundingClientRect();
+    icon.style.setProperty('--tip-top', (r.bottom + 8) + 'px');
+  }
+  // Use pointerover (covers mouse + touch + pen). 'true' = capture phase so
+  // we run BEFORE the :hover paint kicks in.
+  document.addEventListener('pointerover', (e) => {
+    const icon = e.target.closest && e.target.closest('.info-icon');
+    if (icon) _positionInfoTip(icon);
+  }, true);
+  // Re-position on touchstart too (iOS sometimes skips pointerover for taps)
+  document.addEventListener('touchstart', (e) => {
+    const t = e.target;
+    const icon = t && t.closest && t.closest('.info-icon');
+    if (icon) _positionInfoTip(icon);
+  }, { passive: true });
 </script>
 
 <!-- ── Header ─────────────────────────────────────────────────────────────── -->
 <header>
-  <!-- <img class="logo-img" src="./assets/logo.png" alt="League Logo" /> -->
+  <img class="logo-img" src="./assets/logo.png" alt="League Logo" />
   <div class="logo">Aldi's Fantasy Football - <span>The Nonchalant League</span></div>
   <div id="season-selector" style="display:none"></div>
   <div class="header-status">

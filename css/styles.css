@@ -1106,9 +1106,22 @@ td.std-cell { text-align: left; }
     padding: .75rem 1rem;
     gap: .5rem;
   }
-  .logo { font-size: 1.1rem; letter-spacing: 1px; order: 0; flex: 1 1 100%; }
-  #season-selector { order: 1; }
-  .header-status { order: 2; margin-left: auto; }
+  /* Logo: don't take 100% row width — share the row with the icon. The
+     orange "The Nonchalant League" span breaks to its own line so the title
+     wraps as 2 short lines next to the image instead of forcing a layout
+     wrap that pushes the icon onto its own row. */
+  .logo {
+    font-size: 1rem;
+    letter-spacing: .5px;
+    line-height: 1.15;
+    order: 1;
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+  .logo span { display: block; }
+  .logo-img { height: 24px; width: auto; order: 0; flex-shrink: 0; align-self: center; }
+  #season-selector { order: 2; }
+  .header-status { order: 3; margin-left: auto; }
   nav {
     order: 3;
     flex: 1 1 100%;
@@ -1212,9 +1225,33 @@ td.std-cell { text-align: left; }
   .compare-bar { flex-direction: column; align-items: stretch; }
   .compare-bar select { min-width: auto; width: 100%; }
 
-  /* Info blurbs: contain within viewport */
-  .info-blurb { word-break: break-word; overflow-wrap: break-word; }
-  .info-icon::after { max-width: 80vw; }
+  /* Info blurbs: contain within viewport + center on mobile */
+  .info-blurb {
+    word-break: break-word;
+    overflow-wrap: break-word;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+    max-width: calc(100vw - 2rem);
+  }
+  /* Info-icon tooltip on mobile:
+     - Horizontally centered on the VIEWPORT (left: 50%, fixed) so it never
+       overflows off-screen edges no matter where the icon sits on the page.
+     - Vertically anchored just below the icon via the --tip-top CSS variable,
+       which a small JS hover/tap handler sets to the icon's bottom Y. */
+  .info-icon::after {
+    position: fixed;
+    top: var(--tip-top, 80px);
+    left: 50%;
+    right: auto;
+    bottom: auto;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100vw - 2rem);
+    font-size: .76rem;
+    padding: .7rem .85rem;
+    line-height: 1.5;
+  }
 
   /* Power rankings items */
   .pr-bar-wrap { width: 80px; }
@@ -1283,7 +1320,8 @@ td.std-cell { text-align: left; }
     padding: .55rem .65rem;
     gap: .4rem;
   }
-  .logo { font-size: .85rem; letter-spacing: .5px; }
+  .logo { font-size: .85rem; letter-spacing: .5px; line-height: 1.1; }
+  .logo-img { height: 20px; width: auto; }
   #season-selector select { padding: .3rem .6rem; font-size: .72rem; }
   .header-status { font-size: .65rem; }
   .status-dot { width: 6px; height: 6px; }
@@ -1431,18 +1469,18 @@ td.std-cell { text-align: left; }
 
   /* Info icon tooltip */
   .info-icon { font-size: .62rem; width: 16px; height: 16px; }
-  /* Center info-icon tooltip in the viewport so it never overflows the screen */
+  /* Same dynamic-top centering at the small-phone breakpoint */
   .info-icon::after {
     position: fixed;
-    top: 50%;
+    top: var(--tip-top, 80px);
     left: 50%;
     right: auto;
     bottom: auto;
-    transform: translate(-50%, -50%);
+    transform: translateX(-50%);
     max-width: calc(100vw - 2rem);
     width: max-content;
     font-size: .72rem;
-    padding: .8rem .9rem;
+    padding: .7rem .85rem;
     line-height: 1.5;
   }
 
