@@ -176,9 +176,12 @@ async function boot(data) {
   // Extremes across the FULL season (all weekGroups + all individual weeks for biweekly)
   const extremes = computeWeeklyExtremes(weeklyScores, biweeklyScores, teams, completedWeeks, weekGroups, allWeeksWithData);
 
-  // Historical seasons lack real reg-season matchup data (2023, 2024 from different league)
+  // Every season now has real matchup data wired in. We still flag "historical"
+  // for things that ONLY exist on current-season data (player lineups, trades)
+  // — but matchups + H2H + bracket all work for every year.
   const currentSeason = new Date().getFullYear() - 1; // e.g. 2025 for the 2025-26 season
   const isHistorical = (data.meta?.season ?? currentSeason) < currentSeason;
+  const hasTrades = Array.isArray(data.trades) && data.trades.length > 0;
 
   APP = { teams, teamById, schedule, settings, weeklyScores, biweeklyScores, completedWeeks,
           xW, xWByWeek, xWCumByWeek, h2hRecords, extremes, powerRanks, actualWins,
@@ -191,24 +194,23 @@ async function boot(data) {
   renderStandings();
   renderWeeklyScores();
 
-  // Hide matchups section for historical years (no real reg-season pairings)
-  document.getElementById('sec-matchups').style.display = isHistorical ? 'none' : '';
-  if (!isHistorical) renderMatchupSelector();
+  // Matchups + H2H — every season has real data now, so always show
+  document.getElementById('sec-matchups').style.display = '';
+  renderMatchupSelector();
 
-  // Hide H2H comparison for historical years
-  document.getElementById('sec-h2h').style.display = isHistorical ? 'none' : '';
-  if (!isHistorical) {
-    renderH2H('single');
-    renderH2H('biweek');
-    renderCompareDropdowns();
-  }
+  document.getElementById('sec-h2h').style.display = '';
+  renderH2H('single');
+  renderH2H('biweek');
+  renderCompareDropdowns();
 
   renderPowerRankings();
   renderXWChart();
   renderESPNPowerChart();
   renderBracket();
-  if (!isHistorical) renderTradeAnalyzer();
-  document.getElementById('sec-trades').style.display = isHistorical ? 'none' : '';
+
+  // Trade analyzer: only show seasons that have trade data
+  document.getElementById('sec-trades').style.display = hasTrades ? '' : 'none';
+  if (hasTrades) renderTradeAnalyzer();
 
   document.getElementById('loading').style.display = 'none';
   document.getElementById('app').style.display = 'block';
@@ -429,20 +431,11 @@ async function bootAllTime(seasons) {
 
   // ── Compute derived stats ─────────────────────────────────────────────────
 
-  // Compute total W/L: use stored totalWins/totalLosses for historical (fake reg matchups),
-  // derive from actual game results for current-era seasons (2025+)
-  allMatchups.forEach(m => {
-    if (m.homeOwner === m.awayOwner) return;
-    if (m.season < 2025) return; // skip historical fake reg-season matchups
-    const winner = m.homeScore > m.awayScore ? m.homeOwner : m.awayOwner;
-    const loser = m.homeScore > m.awayScore ? m.awayOwner : m.homeOwner;
-    if (ownerStats[winner]) ownerStats[winner].totalWins++;
-    if (ownerStats[loser]) ownerStats[loser].totalLosses++;
-  });
-  // Add historical totals from stored data
+  // Total W/L: use stored t.wins / t.losses (regular season only) for EVERY
+  // season. This is consistent across years and reflects how fantasy career
+  // records are typically reported (playoff games are bracket-based and not
+  // counted toward "career W-L").
   allData.forEach((data, idx) => {
-    const season = data.meta?.season ?? seasons[idx];
-    if (season >= 2025) return; // already counted from matchups
     data.teams.forEach(t => {
       const owner = normOwner(t.owner);
       if (ownerStats[owner]) {
@@ -456,8 +449,9 @@ async function bootAllTime(seasons) {
   const topWeekScores = [...allWeekScores].sort((a,b) => b.score - a.score).slice(0, 10);
   const bottomWeekScores = [...allWeekScores].sort((a,b) => a.score - b.score).slice(0, 10);
 
-  // Biggest blowouts (from real matchups only — 2025+ has real reg-season pairings)
-  const realMatchups = allMatchups.filter(m => m.season >= 2025);
+  // Biggest blowouts / closest games / H2H — include every season now that
+  // 2023 and 2024 have real reg-season matchup pairings wired in.
+  const realMatchups = allMatchups;
   const blowouts = realMatchups.map(m => ({
     ...m,
     margin: Math.abs(m.homeScore - m.awayScore),
@@ -519,8 +513,9 @@ async function bootAllTime(seasons) {
       loserScore: Math.min(m.homeScore, m.awayScore),
     })).sort((a,b) => a.winnerScore - b.winnerScore).slice(0, 5);
 
-  // Owner H2H — only from non-historical seasons (2025+)
-  const h2hMatchups = allMatchups.filter(m => m.season >= 2025 && m.homeOwner !== m.awayOwner);
+  // Owner H2H — every matchup across every season (now that 2023/2024 have
+  // real reg-season pairings wired in). Includes playoff games too.
+  const h2hMatchups = allMatchups.filter(m => m.homeOwner !== m.awayOwner);
   const ownerH2H = {}; // { 'ownerA|||ownerB': { a: wins, b: wins, games: [...] } }
   h2hMatchups.forEach(m => {
     const key = [m.homeOwner, m.awayOwner].sort().join('|||');
@@ -530,7 +525,8 @@ async function bootAllTime(seasons) {
     ownerH2H[key].games.push(m);
   });
 
-  // Win streaks and losing streaks per owner (2025+ real matchups only)
+  // Win streaks and losing streaks per owner — across all seasons now that
+  // 2023/2024 have real reg-season pairings.
   const ownerWeekResults = {}; // { owner: [{season, week, won}] }
   realMatchups.forEach(m => {
     if (m.homeOwner === m.awayOwner) return;
@@ -688,7 +684,7 @@ async function bootAllTime(seasons) {
       <div><label style="font-size:.72rem;color:var(--text3);text-transform:uppercase;letter-spacing:1px">Owner B</label><select id="alltime-h2h-b">${ownerOpts}</select></div>
     </div>
     <div id="alltime-h2h-result"></div>
-    <div style="margin-top:.75rem;font-size:.68rem;color:var(--text3)">* Only includes matchups from 2025–26 onward (real head-to-head data).</div>`;
+    <div style="margin-top:.75rem;font-size:.68rem;color:var(--text3)"></div>`;
 
   // Default to first two different owners
   if (h2hOwners.length >= 2) document.getElementById('alltime-h2h-b').value = h2hOwners[1];
