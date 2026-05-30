@@ -431,18 +431,18 @@ async function bootAllTime(seasons) {
 
   // ── Compute derived stats ─────────────────────────────────────────────────
 
-  // Total W/L: use stored t.wins / t.losses (regular season only) for EVERY
-  // season. This is consistent across years and reflects how fantasy career
-  // records are typically reported (playoff games are bracket-based and not
-  // counted toward "career W-L").
-  allData.forEach((data, idx) => {
-    data.teams.forEach(t => {
-      const owner = normOwner(t.owner);
-      if (ownerStats[owner]) {
-        ownerStats[owner].totalWins += t.totalWins ?? t.wins;
-        ownerStats[owner].totalLosses += t.totalLosses ?? t.losses;
-      }
-    });
+  // Total W/L: count from allMatchups so playoffs are INCLUDED.
+  // allMatchups is built earlier in this function with one entry per game
+  // (combined-week playoff rounds like Wks 15-16 are pre-summed into a single
+  // matchup pairing, so each game counts exactly once across regular season
+  // + playoffs).
+  allMatchups.forEach(m => {
+    if (m.homeOwner === m.awayOwner) return;
+    if (m.homeScore === m.awayScore) return; // skip ties (shouldn't happen in FF)
+    const winner = m.homeScore > m.awayScore ? m.homeOwner : m.awayOwner;
+    const loser  = m.homeScore > m.awayScore ? m.awayOwner : m.homeOwner;
+    if (ownerStats[winner]) ownerStats[winner].totalWins++;
+    if (ownerStats[loser])  ownerStats[loser].totalLosses++;
   });
 
   // Top single-week scores
@@ -1681,11 +1681,11 @@ function computeBiH2H(teams, biweeklyScores, completedWeeks) {
 
 // ── Power Rankings ────────────────────────────────────────────────────────────
 function renderPowerRankings() {
-  const { powerRanks, karma, teams, isHistorical } = APP;
+  const { powerRanks, karma, teams } = APP;
   const maxXW = powerRanks[0]?.xW ?? 1;
 
-  // Hide karma card for historical years (placeholder matchups make karma meaningless)
-  document.getElementById('karma-list').closest('.card').style.display = isHistorical ? 'none' : '';
+  // Karma is now meaningful for every season (2023/2024 have real reg-season matchups)
+  document.getElementById('karma-list').closest('.card').style.display = '';
 
   // xW Power list
   document.getElementById('power-list').innerHTML = powerRanks.map(pr => {
