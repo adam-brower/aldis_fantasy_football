@@ -1045,7 +1045,9 @@ td.std-cell { text-align: left; }
 }
 .cmp-history-row {
   display: grid;
-  grid-template-columns: auto 1fr auto 1fr;
+  /* Fixed-width week label column so the PO badge doesn't shift the scores out
+     of alignment across rows. 6rem fits up to "Wks 16-17 PO" comfortably. */
+  grid-template-columns: 6rem 1fr auto 1fr;
   align-items: center;
   gap: .5rem;
   padding: .25rem 0;
@@ -1056,6 +1058,7 @@ td.std-cell { text-align: left; }
   font-size: .7rem;
   color: var(--text2);
   letter-spacing: .5px;
+  white-space: nowrap;
 }
 .cmp-history-score { font-family: var(--font-mono); text-align: center; }
 .cmp-history-score.win { color: var(--win); font-weight: 700; }

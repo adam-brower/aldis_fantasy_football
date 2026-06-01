@@ -1495,25 +1495,59 @@ function renderCompareResult() {
 
   const sA = seasonSummary.find(s => s.team.id === tA.id);
   const sB = seasonSummary.find(s => s.team.id === tB.id);
-  const key = [tA.id, tB.id].sort().join('_');
-  const allPlay = h2hRecords[key] || {};
-  const aAllPlayW = allPlay[tA.id] ?? 0, bAllPlayW = allPlay[tB.id] ?? 0;
+  // Pull FULL-SEASON summary (includes playoff rounds) for the comparison stats.
+  const sAFull = (APP.seasonSummaryAll || []).find(s => s.team.id === tA.id) || sA;
+  const sBFull = (APP.seasonSummaryAll || []).find(s => s.team.id === tB.id) || sB;
+  // All-Play Wins across the FULL season — count individual played weeks (each
+  // week each team is compared against the other's single-week score). Combined
+  // playoff weeks (16-17 etc.) still count as two separate weeks for all-play
+  // since each calendar week is its own scoring period.
+  const allPlayedWeeks = APP.allWeeksWithData ?? completedWeeks;
+  let aAllPlayW = 0, bAllPlayW = 0;
+  allPlayedWeeks.forEach(w => {
+    const aScore = weeklyScores[tA.id]?.[w] ?? 0;
+    const bScore = weeklyScores[tB.id]?.[w] ?? 0;
+    if (aScore <= 0 || bScore <= 0) return;
+    if (aScore > bScore) aAllPlayW++;
+    else if (bScore > aScore) bAllPlayW++;
+  });
 
-  // Find actual head-to-head matchups in the schedule
+  // Find actual head-to-head matchups in the schedule across the WHOLE season —
+  // regular season + playoffs. For combined-week playoff rounds (e.g. Wks 16-17)
+  // the scores are SUMMED so the matchup counts as ONE game with a single
+  // cumulative score, matching how the game is actually played.
   let aActualW = 0, bActualW = 0, ties = 0;
   const realMatchups = [];
-  completedWeeks.forEach(w => {
-    (schedule[w] ?? []).forEach(m => {
-      if (m.isBye) return;
-      const h = m.homeTeamId, a = m.awayTeamId;
-      if ((h === aId && a === bId) || (h === bId && a === aId)) {
-        const aScore = h === aId ? m.homeScore : m.awayScore;
-        const bScore = h === bId ? m.homeScore : m.awayScore;
-        if (aScore > bScore) aActualW++;
-        else if (bScore > aScore) bActualW++;
-        else ties++;
-        realMatchups.push({ week: w, aScore, bScore });
-      }
+  const { weekGroups } = APP;
+  weekGroups.forEach(g => {
+    const isCombined = g.weeks.length > 1;
+    // For each group, sum scores across all weeks in the group for any pairing
+    // that involves these two teams
+    let aScore = 0, bScore = 0, matched = false;
+    g.weeks.forEach(w => {
+      (schedule[w] ?? []).forEach(m => {
+        if (m.isBye) return;
+        const h = m.homeTeamId, a = m.awayTeamId;
+        if ((h === aId && a === bId) || (h === bId && a === aId)) {
+          matched = true;
+          aScore += h === aId ? m.homeScore : m.awayScore;
+          bScore += h === bId ? m.homeScore : m.awayScore;
+        }
+      });
+    });
+    if (!matched) return;
+    // Skip games that haven't been played yet (both scores 0). This matters
+    // mid-season when a week's matchups exist in the schedule but games haven't
+    // happened — they'd otherwise be wrongly counted as 0-0 ties.
+    if (aScore <= 0 && bScore <= 0) return;
+    if (aScore > bScore) aActualW++;
+    else if (bScore > aScore) bActualW++;
+    else ties++;
+    realMatchups.push({
+      week: g.canonicalWeek,
+      weekLabel: isCombined ? `Wks ${g.weeks[0]}-${g.weeks[g.weeks.length-1]}` : `Wk ${g.canonicalWeek}`,
+      aScore, bScore,
+      isPlayoff: g.canonicalWeek > APP.regWeeks,
     });
   });
 
@@ -1527,10 +1561,11 @@ function renderCompareResult() {
     </div>`;
   };
 
+  // Full-season record row uses sAFull/sBFull defined above (full-season summary).
   const recordRow = (() => {
-    const aRec = `${sA.wins}-${sA.losses}`;
-    const bRec = `${sB.wins}-${sB.losses}`;
-    const aWin = sA.wins > sB.wins, bWin = sB.wins > sA.wins;
+    const aRec = `${sAFull.wins}-${sAFull.losses}`;
+    const bRec = `${sBFull.wins}-${sBFull.losses}`;
+    const aWin = sAFull.wins > sBFull.wins, bWin = sBFull.wins > sAFull.wins;
     return `<div class="cmp-row">
       <div class="cmp-val left ${aWin ? 'win' : ''}">${aRec}</div>
       <div class="cmp-lbl">Record</div>
@@ -1554,12 +1589,13 @@ function renderCompareResult() {
     </div>`;
   })();
 
+  // All stat rows now use FULL-SEASON values (regular season + playoffs).
   const rows = recordRow + [
-    cmpRow(sA.totalPts,     sB.totalPts,     { lbl:'Total PF',           fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
-    cmpRow(sA.avgPts,       sB.avgPts,       { lbl:'Avg / Week',         fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
-    cmpRow(sA.xW,           sB.xW,           { lbl:'Expected Wins (xW)', fa:v=>v.toFixed(3), fb:v=>v.toFixed(3) }),
-    cmpRow(sA.wins - sA.xW, sB.wins - sB.xW, { lbl:'W − xW',             fa:v=>(v>0?'+':'')+v.toFixed(3), fb:v=>(v>0?'+':'')+v.toFixed(3) }),
-    cmpRow(aAllPlayW,       bAllPlayW,       { lbl:'All-Play Wins',      fa:v=>v, fb:v=>v }),
+    cmpRow(sAFull.totalPts,            sBFull.totalPts,            { lbl:'Total PF',           fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
+    cmpRow(sAFull.avgPts,              sBFull.avgPts,              { lbl:'Avg / Week',         fa:v=>v.toFixed(2), fb:v=>v.toFixed(2) }),
+    cmpRow(sAFull.xW,                  sBFull.xW,                  { lbl:'Expected Wins (xW)', fa:v=>v.toFixed(3), fb:v=>v.toFixed(3) }),
+    cmpRow(sAFull.wins - sAFull.xW,    sBFull.wins - sBFull.xW,    { lbl:'W − xW',             fa:v=>(v>0?'+':'')+v.toFixed(3), fb:v=>(v>0?'+':'')+v.toFixed(3) }),
+    cmpRow(aAllPlayW,                  bAllPlayW,                  { lbl:'All-Play Wins',      fa:v=>v, fb:v=>v }),
   ].join('') + directRow;
 
   const realDetail = realMatchups.length
@@ -1567,8 +1603,9 @@ function renderCompareResult() {
         <div class="cmp-history-label">Direct Matchup History</div>
         ${realMatchups.map(m => {
           const aw = m.aScore > m.bScore;
+          const playoffTag = m.isPlayoff ? ' <span style="color:var(--gold);font-size:.6rem;font-weight:600;letter-spacing:1px;text-transform:uppercase">PO</span>' : '';
           return `<div class="cmp-history-row">
-            <span class="cmp-history-week">Wk ${m.week}</span>
+            <span class="cmp-history-week">${esc(m.weekLabel)}${playoffTag}</span>
             <span class="cmp-history-score ${aw?'win':''}">${m.aScore.toFixed(2)}</span>
             <span class="cmp-history-vs">–</span>
             <span class="cmp-history-score ${!aw?'win':''}">${m.bScore.toFixed(2)}</span>
