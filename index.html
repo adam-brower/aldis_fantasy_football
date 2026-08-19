@@ -195,6 +195,27 @@
       </div>
     </section>
 
+    <!-- ── Season ELO ────────────────────────────── -->
+    <section class="page-section" id="sec-elo">
+      <div class="page-title">Season <span>ELO</span> <span class="info-icon" data-tip="Every team resets to 1000 ELO in week 1. After each game the winner takes rating points from the loser — the amount depends on how big an upset it was and how lopsided the score was (log-scaled, so a 40-point blowout is worth more than a 2-point squeaker, but not 20x more). Games inside the top-4 playoff bracket count 1.5x; consolation games between teams that missed the cut count normally. Combined championship weeks count as one game. The system is zero-sum: every team's rating always adds back up to 1000 x the number of teams.">i</span></div>
+
+      <div class="card">
+        <div class="card-title">ELO Rating by Week</div>
+        <div class="chart-wrap">
+          <canvas id="elo-season-chart"></canvas>
+        </div>
+        <div class="chart-legend-toggle" id="elo-season-legend"></div>
+      </div>
+
+      <div class="card section-gap">
+        <div class="card-title">ELO Standings <span class="info-icon" data-tip="Click any row to expand that team's week-by-week ELO log — every opponent, the score, the win probability the model gave before kickoff, and the exact points gained or lost.">i</span></div>
+        <div class="table-wrap">
+          <table id="elo-season-table"></table>
+        </div>
+        <div class="elo-note" id="elo-season-note"></div>
+      </div>
+    </section>
+
     <!-- ── Playoff Predictor ─────────────────────── -->
     <section class="page-section" id="sec-bracket">
       <div class="page-title">Playoff <span>Bracket</span> <span class="info-icon" data-tip="During the regular season this shows a predicted bracket based on current seeding. Tiebreaker chain for each predicted matchup: 2-week rolling H2H → direct H2H → Points For. Once playoffs start the actual results take over (toggle to overlay the prediction).">i</span></div>
@@ -232,6 +253,31 @@
     <section class="page-section">
       <div class="page-title">Owner vs Owner <span>All-Time</span></div>
       <div class="card" id="alltime-h2h"></div>
+    </section>
+
+    <section class="page-section">
+      <div class="page-title">Career <span>ELO</span> <span class="info-icon" data-tip="One continuous rating per manager across all of league history. Everyone starts at 1000 the first season they appear. Winners take rating points from losers, scaled by the upset size and the margin of victory; games inside the top-4 playoff bracket count 1.5x (consolation games count normally). Between seasons every rating is pulled 25% of the way back toward 1000 to account for redrafts and roster turnover — that's the dip just after each dashed season line. Hover or tap any point on the chart to see who they played that week and exactly what it cost them.">i</span></div>
+
+      <div class="card">
+        <div class="card-title">Career ELO Over Time</div>
+        <div class="chart-wrap" style="height:480px">
+          <canvas id="elo-career-chart"></canvas>
+        </div>
+        <div class="chart-legend-toggle" id="elo-career-legend"></div>
+      </div>
+
+      <div class="card section-gap">
+        <div class="card-title">Career ELO Leaderboard</div>
+        <div class="table-wrap">
+          <table id="elo-career-table"></table>
+        </div>
+      </div>
+
+      <div class="grid-2 section-gap">
+        <div class="card" id="elo-records"></div>
+        <div class="card" id="elo-swings"></div>
+      </div>
+
     </section>
 
     <section class="page-section">

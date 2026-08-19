@@ -1557,3 +1557,84 @@ td.std-cell { text-align: left; }
   margin-bottom: 1.25rem;
 }
 
+
+/* ── ELO ─────────────────────────────────────────────────────────────────── */
+.elo-note {
+  margin-top: .9rem;
+  font-size: .7rem;
+  color: var(--text3);
+  line-height: 1.6;
+}
+.elo-note strong { color: var(--text2); }
+
+.elo-val {
+  font-family: var(--font-mono);
+  font-weight: 600;
+}
+.elo-up   { color: var(--accent3); }
+.elo-down { color: #f87171; }
+.elo-flat { color: var(--text3); }
+
+.elo-chip {
+  display: inline-block;
+  font-family: var(--font-mono);
+  font-size: .62rem;
+  padding: .1rem .4rem;
+  border-radius: 999px;
+  letter-spacing: .04em;
+}
+.elo-chip.w { background: rgba(127,255,107,.12); color: var(--accent3); border: 1px solid rgba(127,255,107,.28); }
+.elo-chip.l { background: rgba(248,113,113,.12); color: #f87171;      border: 1px solid rgba(248,113,113,.28); }
+.elo-chip.po{ background: rgba(0,212,255,.10);   color: var(--accent); border: 1px solid rgba(0,212,255,.3); }
+.elo-chip.con{ background: rgba(122,138,158,.10); color: var(--text3); border: 1px solid rgba(122,138,158,.25); }
+
+tr.elo-row { cursor: pointer; }
+tr.elo-row.open { background: var(--bg3); }
+tr.elo-row td:first-child::before {
+  content: '▸';
+  color: var(--text3);
+  display: inline-block;
+  width: 1rem;
+  transition: transform .15s;
+}
+tr.elo-row.open td:first-child::before { transform: rotate(90deg); }
+
+tr.elo-detail > td { padding: 0 !important; background: var(--bg3); }
+.elo-detail-inner { padding: .75rem 1rem 1rem; }
+.elo-detail-inner table { width: 100%; border-collapse: collapse; font-size: .74rem; }
+.elo-detail-inner th {
+  text-align: center; padding: .3rem .35rem;
+  font-size: .6rem; text-transform: uppercase; letter-spacing: .08em;
+  color: var(--text3); border-bottom: 1px solid var(--border); white-space: nowrap;
+}
+.elo-detail-inner td { text-align: center; padding: .3rem .35rem; border-bottom: 1px solid rgba(30,39,51,.5); }
+.elo-detail-inner tr:last-child td { border-bottom: none; }
+
+.elo-rec-list { font-size: .78rem; line-height: 1.95; }
+.elo-rec-list .num { font-family: var(--font-mono); font-weight: 700; }
+.elo-rec-list .meta { color: var(--text3); font-size: .7rem; }
+
+@media (max-width: 700px) {
+  .chart-wrap#elo-career-wrap, #elo-career-chart { height: 320px; }
+  .elo-detail-inner { padding: .5rem; }
+  .elo-detail-inner table { font-size: .65rem; }
+}
+
+/* Legend affordance hint */
+.legend-hint {
+  font-family: var(--font-mono);
+  font-size: .6rem;
+  color: var(--text3);
+  align-self: center;
+  margin-left: .35rem;
+  letter-spacing: .02em;
+  opacity: .75;
+}
+
+/* Compact info icon for dense table headers */
+.info-icon.tiny {
+  width: 13px;
+  height: 13px;
+  font-size: .55rem;
+  margin-left: .25rem;
+}

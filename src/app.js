@@ -23,6 +23,7 @@ import {
   computeTotalTouchdowns,
   computeScheduleKarma,
 } from './stats.js';
+import { computeSeasonElo, computeCareerElo, ELO_DEFAULTS } from './elo.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let APP = {};
@@ -164,6 +165,9 @@ async function boot(data) {
   // Actual bracket (only meaningful once playoffs have happened)
   const actualBracket = resolveActualBracket(schedule, weekGroups, teams, regSeed, regWeeks);
 
+  // ── Season ELO — everyone resets to 1000 in week 1 of this season ─────────
+  const seasonElo = computeSeasonElo(schedule, teams, settings, data.meta?.season ?? null);
+
   // Trade data passed through from data.json
   const trades = data.trades ?? [];
 
@@ -189,7 +193,7 @@ async function boot(data) {
           weekGroups, allCanonical, weekMinMax,
           pyth, actualWinsAll, seasonSummaryAll,
           regSeed, h2h2wk, predictedBracket, actualBracket, trades,
-          totalTDs, allWeeksWithData, isHistorical };
+          totalTDs, allWeeksWithData, isHistorical, seasonElo };
 
   renderStandings();
   renderWeeklyScores();
@@ -206,6 +210,7 @@ async function boot(data) {
   renderPowerRankings();
   renderXWChart();
   renderESPNPowerChart();
+  renderSeasonElo();
   renderBracket();
 
   // Trade analyzer: only show seasons that have trade data
@@ -769,6 +774,17 @@ async function bootAllTime(seasons) {
       <div style="font-weight:600;color:var(--text2);margin-top:.75rem;margin-bottom:.3rem">💀 Longest Losing Streaks</div>
       ${loseStreaks.slice(0,5).map((s,i) => `<div>${i+1}. <strong>${s.owner}</strong> — ${s.length} losses ${s.start ? `<span style="color:var(--text3)">(${s.start.season} Wk${s.start.week} → ${s.end.season} Wk${s.end.week})</span>` : ''}</div>`).join('')}
     </div>`;
+
+  // ── Career ELO ────────────────────────────────────────────────────────────
+  const eloSeasonInputs = allData.map((d, i) => ({
+    season: d.meta?.season ?? seasons[i],
+    teams: d.teams,
+    schedule: d.schedule,
+    settings: d.settings,
+  }));
+  const careerElo = computeCareerElo(eloSeasonInputs, normOwner);
+  window._careerElo = careerElo;
+  renderCareerElo(careerElo);
 
   // Show the view
   document.getElementById('loading').style.display = 'none';
@@ -1916,19 +1932,11 @@ function renderXWChart() {
   });
 
   // Custom legend toggles
-  const legend = document.getElementById('xw-legend');
-  legend.innerHTML = teams.map((t, i) =>
-    `<button class="on" data-idx="${i}" style="border-color:${palette[i%palette.length]};color:${palette[i%palette.length]}">${esc(shortName(t))}</button>`
-  ).join('');
-  legend.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = parseInt(btn.dataset.idx);
-      const meta = _xwChart.getDatasetMeta(i);
-      meta.hidden = !meta.hidden;
-      btn.classList.toggle('on', !meta.hidden);
-      _xwChart.update();
-    });
-  });
+  wireChartLegend(
+    document.getElementById('xw-legend'),
+    () => _xwChart,
+    teams.map((t, i) => ({ label: shortName(t), color: palette[i % palette.length] }))
+  );
 }
 
 // ── ESPN Power Ranking Chart ──────────────────────────────────────────────────
@@ -2004,19 +2012,11 @@ function renderESPNPowerChart() {
     }
   });
 
-  const legend = document.getElementById('espn-pr-legend');
-  legend.innerHTML = teams.map((t, i) =>
-    `<button class="on" data-idx="${i}" style="border-color:${palette[i%palette.length]};color:${palette[i%palette.length]}">${esc(shortName(t))}</button>`
-  ).join('');
-  legend.querySelectorAll('button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      const i = parseInt(btn.dataset.idx);
-      const meta = _espnChart.getDatasetMeta(i);
-      meta.hidden = !meta.hidden;
-      btn.classList.toggle('on', !meta.hidden);
-      _espnChart.update();
-    });
-  });
+  wireChartLegend(
+    document.getElementById('espn-pr-legend'),
+    () => _espnChart,
+    teams.map((t, i) => ({ label: shortName(t), color: palette[i % palette.length] }))
+  );
 }
 
 // ── Table sorting + column highlight ──────────────────────────────────────────
@@ -2302,3 +2302,432 @@ function renderTradeCard(tr, idx, teamById) {
   window.addEventListener('orientationchange', schedule);
   schedule();
 })();
+
+// ── Shared chart legend wiring ───────────────────────────────────────────────
+// Left-click / tap  → toggle that one series on or off.
+// Right-click (or long-press on touch) → isolate that series, hiding every
+//   other one. Doing it again on the same series restores the full chart.
+function wireChartLegend(legendEl, getChart, items) {
+  if (!legendEl) return;
+  legendEl.innerHTML = items.map((it, i) =>
+    `<button class="on" data-idx="${i}" style="border-color:${it.color};color:${it.color}">${esc(it.label)}</button>`
+  ).join('') + `<span class="legend-hint">click to toggle · right-click or long-press to isolate</span>`;
+
+  const buttons = [...legendEl.querySelectorAll('button')];
+  legendEl._soloIdx = null;
+
+  const paint = () => {
+    const chart = getChart();
+    if (!chart) return;
+    buttons.forEach((btn, i) => {
+      const meta = chart.getDatasetMeta(i);
+      btn.classList.toggle('on', !meta.hidden);
+    });
+    chart.update();
+  };
+
+  const toggleOne = (i) => {
+    const chart = getChart();
+    if (!chart) return;
+    legendEl._soloIdx = null;
+    const meta = chart.getDatasetMeta(i);
+    meta.hidden = !meta.hidden;
+    paint();
+  };
+
+  const solo = (i) => {
+    const chart = getChart();
+    if (!chart) return;
+    const restoring = legendEl._soloIdx === i;
+    legendEl._soloIdx = restoring ? null : i;
+    buttons.forEach((_, j) => {
+      chart.getDatasetMeta(j).hidden = restoring ? false : (j !== i);
+    });
+    paint();
+  };
+
+  buttons.forEach((btn, i) => {
+    btn.addEventListener('click', (e) => { e.preventDefault(); toggleOne(i); });
+    btn.addEventListener('contextmenu', (e) => { e.preventDefault(); solo(i); });
+
+    // Long-press = isolate, for touch devices where right-click isn't a thing.
+    let timer = null, startX = 0, startY = 0, fired = false;
+    const clearTimer = () => { if (timer) { clearTimeout(timer); timer = null; } };
+    btn.addEventListener('touchstart', (e) => {
+      const t = e.touches[0];
+      startX = t.clientX; startY = t.clientY; fired = false;
+      clearTimer();
+      timer = setTimeout(() => { fired = true; solo(i); }, 450);
+    }, { passive: true });
+    btn.addEventListener('touchmove', (e) => {
+      const t = e.touches[0];
+      if (Math.abs(t.clientX - startX) > 10 || Math.abs(t.clientY - startY) > 10) clearTimer();
+    }, { passive: true });
+    btn.addEventListener('touchend', (e) => {
+      clearTimer();
+      // Swallow the click that follows a completed long-press.
+      if (fired) { e.preventDefault(); fired = false; }
+    });
+    btn.addEventListener('touchcancel', clearTimer, { passive: true });
+  });
+
+  paint();
+}
+
+// ═══════════════════════════════════════════════════════════════════════════
+// ELO RENDERING
+// ═══════════════════════════════════════════════════════════════════════════
+
+const ELO_PALETTE = ['#00d4ff','#ff6b2b','#7fff6b','#f59e0b','#a78bfa','#ec4899','#22c55e','#fbbf24','#60a5fa','#f87171'];
+
+// Managers hidden from the Career ELO section (chart, leaderboard, records, log).
+// This is a DISPLAY filter only — their games still run through the engine, so
+// everyone else's rating history stays exactly as it was actually earned. They
+// can still appear as an opponent in someone else's log, because they were one.
+const CAREER_ELO_HIDDEN = new Set(['Jason Head']);
+
+function eloFmt(n)      { return (n ?? 0).toFixed(0); }
+function eloDeltaFmt(d) { const s = d >= 0 ? '+' : '−'; return s + Math.abs(d).toFixed(1); }
+function eloDeltaCls(d) { return d > 0.05 ? 'elo-up' : d < -0.05 ? 'elo-down' : 'elo-flat'; }
+function eloPct(p)      { return p == null ? '—' : (p * 100).toFixed(0) + '%'; }
+
+/** Chart.js plugin: faint vertical rule wherever a new season begins. */
+const eloSeasonDividers = {
+  id: 'eloSeasonDividers',
+  beforeDatasetsDraw(chart, _args, opts) {
+    const idxs = opts?.indices ?? [];
+    if (!idxs.length) return;
+    const { ctx, chartArea, scales } = chart;
+    ctx.save();
+    idxs.forEach(({ index, label }) => {
+      const x = scales.x.getPixelForValue(index);
+      if (x == null || isNaN(x)) return;
+      ctx.beginPath();
+      ctx.setLineDash([3, 4]);
+      ctx.strokeStyle = 'rgba(122,138,158,.45)';
+      ctx.lineWidth = 1;
+      ctx.moveTo(x, chartArea.top);
+      ctx.lineTo(x, chartArea.bottom);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.fillStyle = '#7a8a9e';
+      ctx.font = '10px "DM Mono", monospace';
+      ctx.textAlign = 'left';
+      ctx.fillText(label, x + 4, chartArea.top + 12);
+    });
+    ctx.restore();
+  }
+};
+
+/** Shared line-chart builder for both ELO charts. */
+function buildEloChart(canvasId, legendId, elo, entities, opts = {}) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return null;
+  const ctx = canvas.getContext('2d');
+
+  const labels = elo.points.map(p => p.label);
+
+  const datasets = entities.map((e, i) => {
+    const color = ELO_PALETTE[i % ELO_PALETTE.length];
+    return {
+      label: e.short,
+      data: elo.series[e.key] ?? [],
+      _full: e.full,
+      _key: e.key,
+      borderColor: color,
+      backgroundColor: color + '22',
+      borderWidth: 1.5,
+      tension: 0.2,
+      pointRadius: 2,
+      pointHoverRadius: 5,
+      pointBackgroundColor: color,
+      spanGaps: false,
+    };
+  });
+
+  // Season divider positions (career chart only)
+  const dividers = [];
+  if (opts.seasonDividers) {
+    let last = null;
+    elo.points.forEach((p, i) => {
+      if (p.season != null && p.season !== last) { dividers.push({ index: i, label: String(p.season) }); last = p.season; }
+    });
+  }
+
+  const chart = new Chart(ctx, {
+    type: 'line',
+    data: { labels, datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'nearest', intersect: false },
+      plugins: {
+        legend: { display: false },
+        eloSeasonDividers: { indices: dividers },
+        tooltip: {
+          backgroundColor: '#10141a',
+          borderColor: '#1e2733',
+          borderWidth: 1,
+          titleColor: '#e8edf5',
+          bodyColor: '#e8edf5',
+          padding: 12,
+          displayColors: true,
+          callbacks: {
+            title: (items) => {
+              const p = elo.points[items[0]?.dataIndex ?? 0];
+              if (!p) return '';
+              return p.type === 'regression' ? `${p.season} offseason reset`
+                   : p.type === 'start'      ? 'Season start'
+                   : (opts.seasonDividers ? `${p.season} · ${p.label.replace(/^'\d\d /, '')}` : p.label);
+            },
+            label: (c) => {
+              const p = elo.points[c.dataIndex];
+              const entry = elo.entryAt[c.dataset._key]?.[p?.key];
+              const rating = c.parsed.y;
+              if (!entry || entry.result === 'start') {
+                return `${c.dataset._full}: ${rating.toFixed(0)}`;
+              }
+              if (entry.result === 'regression') {
+                return `${c.dataset._full}: ${rating.toFixed(0)} (${eloDeltaFmt(entry.delta)} offseason regression)`;
+              }
+              const verb = entry.result === 'W' ? 'beat' : entry.result === 'L' ? 'lost to' : 'tied';
+              return [
+                `${c.dataset._full}: ${rating.toFixed(0)}  (${eloDeltaFmt(entry.delta)})`,
+                `   ${verb} ${entry.opponentLabel} · ${entry.score.toFixed(1)}–${entry.oppScore.toFixed(1)}`,
+                `   pre-game win prob ${eloPct(entry.winProb)}${entry.bracket === 'playoff' ? ' · playoff bracket 1.5x' : entry.bracket === 'consolation' ? ' · consolation 1x' : ''}`,
+              ];
+            }
+          }
+        }
+      },
+      scales: {
+        x: {
+          grid: { color: 'rgba(30,39,51,.4)' },
+          ticks: {
+            color: '#7a8a9e',
+            font: { family: 'DM Mono', size: _isMobile() ? 8 : 11 },
+            maxRotation: 60, minRotation: 0,
+            autoSkip: true, maxTicksLimit: _isMobile() ? 8 : 26,
+          }
+        },
+        y: {
+          grid: { color: 'rgba(30,39,51,.4)' },
+          ticks: { color: '#7a8a9e', font: { family: 'DM Mono', size: _isMobile() ? 9 : 12 } },
+          title: { display: true, text: 'ELO Rating', color: '#7a8a9e', font: { size: _isMobile() ? 10 : 12 } }
+        }
+      }
+    },
+    plugins: [eloSeasonDividers]
+  });
+
+  wireChartLegend(
+    document.getElementById(legendId),
+    () => chart,
+    entities.map((e, i) => ({ label: e.short, color: ELO_PALETTE[i % ELO_PALETTE.length] }))
+  );
+  return chart;
+}
+
+/** Week-by-week log table used inside expandable ELO rows. */
+function eloLogTable(history, opts = {}) {
+  const rows = history.filter(e => e.result === 'W' || e.result === 'L' || e.result === 'T' || e.result === 'regression');
+  if (!rows.length) return `<div style="padding:.75rem;color:var(--text3)">No games played.</div>`;
+  const showSeason = !!opts.showSeason;
+  return `<table>
+    <thead><tr>
+      ${showSeason ? '<th>Season</th>' : ''}
+      <th>Week</th><th style="text-align:left">Opponent</th><th>Score</th><th>Result</th><th>Win Prob <span class="info-icon tiny" data-tip="The ELO model&#39;s pre-game win probability, worked out from the two ratings going into that week: 1 / (1 + 10^((opponent rating - your rating) / 600)). It only looks at the ratings, not at scores or matchups. Week 1 of a season is always 50% because everyone is sitting on 1000. The 600 scale is deliberately wide - fantasy is high variance, so even a 360-point rating edge only reads about 80%. Measured across league history the model picks the winner 54.5% of the time, so treat it as a nudge, not a forecast.">i</span></th><th>Δ ELO</th><th>ELO</th>
+    </tr></thead>
+    <tbody>${rows.map(e => {
+      if (e.result === 'regression') {
+        return `<tr>
+          ${showSeason ? `<td>${e.season}</td>` : ''}
+          <td>—</td>
+          <td style="text-align:left;color:var(--text3);font-style:italic">offseason regression toward 1000</td>
+          <td>—</td><td>—</td><td>—</td>
+          <td class="elo-val ${eloDeltaCls(e.delta)}">${eloDeltaFmt(e.delta)}</td>
+          <td class="elo-val">${eloFmt(e.after)}</td>
+        </tr>`;
+      }
+      return `<tr>
+        ${showSeason ? `<td>${e.season}</td>` : ''}
+        <td>${esc(e.weekLabel)}${e.bracket === 'playoff' ? ' <span class="elo-chip po">PO 1.5x</span>' : e.bracket === 'consolation' ? ' <span class="elo-chip con">CON</span>' : ''}</td>
+        <td style="text-align:left">${esc(e.opponentLabel ?? '—')}</td>
+        <td>${e.score.toFixed(1)} – ${e.oppScore.toFixed(1)}</td>
+        <td><span class="elo-chip ${e.result === 'W' ? 'w' : 'l'}">${e.result}</span></td>
+        <td>${eloPct(e.winProb)}</td>
+        <td class="elo-val ${eloDeltaCls(e.delta)}">${eloDeltaFmt(e.delta)}</td>
+        <td class="elo-val">${eloFmt(e.after)}</td>
+      </tr>`;
+    }).join('')}</tbody>
+  </table>`;
+}
+
+// ── Season ELO ───────────────────────────────────────────────────────────────
+let _eloSeasonChart = null;
+function renderSeasonElo() {
+  const { teams, seasonElo, settings } = APP;
+  if (!seasonElo) return;
+
+  const entities = teams.map(t => ({ key: String(t.id), short: shortName(t), full: t.name }));
+  // seasonElo keys are numeric team ids — normalise the series/entryAt lookups
+  const elo = {
+    ...seasonElo,
+    series:  Object.fromEntries(Object.entries(seasonElo.series).map(([k, v]) => [String(k), v])),
+    entryAt: Object.fromEntries(Object.entries(seasonElo.entryAt).map(([k, v]) => [String(k), v])),
+  };
+
+  if (_eloSeasonChart) _eloSeasonChart.destroy();
+  _eloSeasonChart = buildEloChart('elo-season-chart', 'elo-season-legend', elo, entities, { seasonDividers: false });
+
+  // ── Standings table
+  const byId = Object.fromEntries(teams.map(t => [String(t.id), t]));
+  const rows = seasonElo.summary.map(s => ({ ...s, team: byId[String(s.key)] })).filter(s => s.team);
+
+  const table = document.getElementById('elo-season-table');
+  table.innerHTML = `
+    <thead><tr>
+      <th style="text-align:left">#</th>
+      <th style="text-align:left">Team</th>
+      <th>ELO</th><th>Δ from 1000</th><th>Rec</th><th>Peak</th><th>Low</th>
+      <th style="text-align:left">Biggest Gain</th><th style="text-align:left">Biggest Drop</th>
+    </tr></thead>
+    <tbody>${rows.map(s => {
+      const diff = s.rating - ELO_DEFAULTS.base;
+      const gain = s.bestGain, drop = s.worstDrop;
+      return `<tr class="elo-row" data-key="${esc(String(s.key))}">
+        <td style="text-align:left"><span class="rank">${s.rank}</span></td>
+        <td style="text-align:left">
+          <div style="font-weight:600">${esc(s.team.name)}</div>
+          <div style="font-size:.68rem;color:var(--text3)">${esc(ownerStr(s.team))}</div>
+        </td>
+        <td class="center elo-val" style="font-size:.95rem;color:var(--accent)">${eloFmt(s.rating)}</td>
+        <td class="center elo-val ${eloDeltaCls(diff)}">${eloDeltaFmt(diff)}</td>
+        <td class="center">${s.wins}–${s.losses}</td>
+        <td class="center elo-val">${eloFmt(s.peak.rating)}<div style="font-size:.6rem;color:var(--text3)">${s.peak.entry ? esc(s.peak.entry.weekLabel) : 'start'}</div></td>
+        <td class="center elo-val">${eloFmt(s.low.rating)}<div style="font-size:.6rem;color:var(--text3)">${s.low.entry ? esc(s.low.entry.weekLabel) : 'start'}</div></td>
+        <td style="text-align:left;font-size:.72rem">${gain ? `<span class="elo-val elo-up">${eloDeltaFmt(gain.delta)}</span> <span style="color:var(--text3)">beat ${esc(gain.opponentLabel)} (${esc(gain.weekLabel)})</span>` : '—'}</td>
+        <td style="text-align:left;font-size:.72rem">${drop ? `<span class="elo-val elo-down">${eloDeltaFmt(drop.delta)}</span> <span style="color:var(--text3)">lost to ${esc(drop.opponentLabel)} (${esc(drop.weekLabel)})</span>` : '—'}</td>
+      </tr>
+      <tr class="elo-detail" data-for="${esc(String(s.key))}" style="display:none">
+        <td colspan="9"><div class="elo-detail-inner">${eloLogTable(s.history)}</div></td>
+      </tr>`;
+    }).join('')}</tbody>`;
+
+  table.querySelectorAll('tr.elo-row').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const key = tr.dataset.key;
+      const detail = table.querySelector(`tr.elo-detail[data-for="${CSS.escape(key)}"]`);
+      const open = detail.style.display !== 'none';
+      detail.style.display = open ? 'none' : '';
+      tr.classList.toggle('open', !open);
+    });
+  });
+
+  const nTeams = teams.length;
+  const nPlayoff = settings?.playoffTeamCount ?? 4;
+  const combined = (settings?.combineWeeks ?? []).map(g => `Wks ${g.join('–')}`).join(', ');
+  document.getElementById('elo-season-note').innerHTML =
+    `<strong>How it works:</strong> everyone starts at ${ELO_DEFAULTS.base}. Each game the winner takes
+     points from the loser — the amount scales with how big an upset the result was and, on a log curve,
+     how lopsided the score was. K = ${ELO_DEFAULTS.K}; games inside the top-${nPlayoff} playoff bracket
+     are weighted ${ELO_DEFAULTS.playoffWeight}x while consolation games count normally${combined ? `; ${combined} count as one game each` : ''}.
+     Ratings are zero-sum, so all ${nTeams} teams always total ${(ELO_DEFAULTS.base * nTeams).toLocaleString()}.
+     <strong>Click a row</strong> for the full week-by-week log.`;
+}
+
+// ── Career ELO ───────────────────────────────────────────────────────────────
+let _eloCareerChart = null;
+function renderCareerElo(elo) {
+  // Display-only filter — see CAREER_ELO_HIDDEN above.
+  const shown = elo.summary
+    .filter(s => !CAREER_ELO_HIDDEN.has(s.key))
+    .map((s, i) => ({ ...s, rank: i + 1 }));
+  const entities = shown.map(s => ({ key: s.key, short: firstName(s.key), full: s.key }));
+
+  if (_eloCareerChart) _eloCareerChart.destroy();
+  _eloCareerChart = buildEloChart('elo-career-chart', 'elo-career-legend', elo, entities, { seasonDividers: true });
+
+  // ── Leaderboard ──────────────────────────────────────────────────────────
+  const table = document.getElementById('elo-career-table');
+  table.innerHTML = `
+    <thead><tr>
+      <th style="text-align:left">#</th>
+      <th style="text-align:left">Manager</th>
+      <th>ELO</th><th>Δ from 1000</th><th>Games</th><th>Rec</th><th>Peak</th><th>Low</th><th>Upsets <span class="info-icon tiny" data-tip="Wins where the ELO model gave this manager under a 40%% chance going in. That probability comes from the two ratings before the game: 1 / (1 + 10^((opponent rating - your rating) / 600)).">i</span></th>
+      <th style="text-align:left">Biggest Gain</th><th style="text-align:left">Biggest Drop</th>
+    </tr></thead>
+    <tbody>${shown.map(s => {
+      const diff = s.rating - ELO_DEFAULTS.base;
+      const g = s.bestGain, d = s.worstDrop;
+      const when = (e) => e ? `${e.season} ${e.weekLabel}` : 'start';
+      return `<tr class="elo-row" data-key="${esc(s.key)}">
+        <td style="text-align:left"><span class="rank">${s.rank}</span></td>
+        <td style="text-align:left;font-weight:600">${esc(s.label)}</td>
+        <td class="center elo-val" style="font-size:.95rem;color:var(--accent)">${eloFmt(s.rating)}</td>
+        <td class="center elo-val ${eloDeltaCls(diff)}">${eloDeltaFmt(diff)}</td>
+        <td class="center">${s.games}</td>
+        <td class="center">${s.wins}–${s.losses}</td>
+        <td class="center elo-val">${eloFmt(s.peak.rating)}<div style="font-size:.6rem;color:var(--text3)">${esc(when(s.peak.entry))}</div></td>
+        <td class="center elo-val">${eloFmt(s.low.rating)}<div style="font-size:.6rem;color:var(--text3)">${esc(when(s.low.entry))}</div></td>
+        <td class="center">${s.upsets}</td>
+        <td style="text-align:left;font-size:.72rem">${g ? `<span class="elo-val elo-up">${eloDeltaFmt(g.delta)}</span> <span style="color:var(--text3)">beat ${esc(firstName(g.opponentLabel))} (${g.season} ${esc(g.weekLabel)})</span>` : '—'}</td>
+        <td style="text-align:left;font-size:.72rem">${d ? `<span class="elo-val elo-down">${eloDeltaFmt(d.delta)}</span> <span style="color:var(--text3)">lost to ${esc(firstName(d.opponentLabel))} (${d.season} ${esc(d.weekLabel)})</span>` : '—'}</td>
+      </tr>
+      <tr class="elo-detail" data-for="${esc(s.key)}" style="display:none">
+        <td colspan="11"><div class="elo-detail-inner">${eloLogTable(s.history, { showSeason: true })}</div></td>
+      </tr>`;
+    }).join('')}</tbody>`;
+
+  table.querySelectorAll('tr.elo-row').forEach(tr => {
+    tr.addEventListener('click', () => {
+      const key = tr.dataset.key;
+      const detail = table.querySelector(`tr.elo-detail[data-for="${CSS.escape(key)}"]`);
+      const open = detail.style.display !== 'none';
+      detail.style.display = open ? 'none' : '';
+      tr.classList.toggle('open', !open);
+    });
+  });
+
+  // ── Peak / low records across all managers ───────────────────────────────
+  const allEntries = [];
+  Object.entries(elo.history).forEach(([owner, h]) => {
+    if (CAREER_ELO_HIDDEN.has(owner)) return;
+    h.forEach(e => { if (e.result !== 'start') allEntries.push({ owner, ...e }); });
+  });
+
+  const peaks = [...shown].sort((a, b) => b.peak.rating - a.peak.rating);
+  const lows  = [...shown].sort((a, b) => a.low.rating - b.low.rating);
+  const whenStr = (e) => e ? `${e.season} · ${e.weekLabel}` : '—';
+
+  document.getElementById('elo-records').innerHTML = `
+    <div class="card-title">Peak & Low ELO Records</div>
+    <div class="elo-rec-list">
+      <div style="font-weight:600;color:var(--text2);margin-bottom:.25rem">Highest Rating Ever Reached</div>
+      ${peaks.slice(0, 5).map((s, i) => `<div>${i + 1}. <span class="num elo-up">${eloFmt(s.peak.rating)}</span> — ${esc(s.label)} <span class="meta">(${esc(whenStr(s.peak.entry))})</span></div>`).join('')}
+      <div style="font-weight:600;color:var(--text2);margin-top:.9rem;margin-bottom:.25rem">Lowest Rating Ever Reached</div>
+      ${lows.slice(0, 5).map((s, i) => `<div>${i + 1}. <span class="num elo-down">${eloFmt(s.low.rating)}</span> — ${esc(s.label)} <span class="meta">(${esc(whenStr(s.low.entry))})</span></div>`).join('')}
+      <div style="margin-top:.9rem;padding-top:.6rem;border-top:1px solid var(--border);font-size:.72rem;color:var(--text3)">
+        Widest gap in league history: <strong style="color:var(--text2)">${eloFmt(peaks[0]?.peak.rating - lows[0]?.low.rating)}</strong> ELO points
+        (${esc(peaks[0]?.label ?? '')} at their best vs ${esc(lows[0]?.label ?? '')} at their worst).
+      </div>
+    </div>`;
+
+  // ── Biggest single-game swings + upsets ──────────────────────────────────
+  const played = allEntries.filter(e => e.result === 'W' || e.result === 'L');
+  const bigGains = played.filter(e => e.delta > 0).sort((a, b) => b.delta - a.delta).slice(0, 5);
+  const bigDrops = played.filter(e => e.delta < 0).sort((a, b) => a.delta - b.delta).slice(0, 5);
+  const upsets = played.filter(e => e.result === 'W' && e.winProb != null).sort((a, b) => a.winProb - b.winProb).slice(0, 5);
+
+  document.getElementById('elo-swings').innerHTML = `
+    <div class="card-title">Biggest Single-Game Swings</div>
+    <div class="elo-rec-list">
+      <div style="font-weight:600;color:var(--text2);margin-bottom:.25rem">Largest ELO Gains</div>
+      ${bigGains.map((e, i) => `<div>${i + 1}. <span class="num elo-up">${eloDeltaFmt(e.delta)}</span> — ${esc(firstName(e.owner))} beat ${esc(firstName(e.opponentLabel))} ${e.score.toFixed(1)}–${e.oppScore.toFixed(1)} <span class="meta">(${e.season} ${esc(e.weekLabel)})</span></div>`).join('')}
+      <div style="font-weight:600;color:var(--text2);margin-top:.9rem;margin-bottom:.25rem">Largest ELO Losses</div>
+      ${bigDrops.map((e, i) => `<div>${i + 1}. <span class="num elo-down">${eloDeltaFmt(e.delta)}</span> — ${esc(firstName(e.owner))} lost to ${esc(firstName(e.opponentLabel))} ${e.score.toFixed(1)}–${e.oppScore.toFixed(1)} <span class="meta">(${e.season} ${esc(e.weekLabel)})</span></div>`).join('')}
+      <div style="font-weight:600;color:var(--text2);margin-top:.9rem;margin-bottom:.25rem">Biggest Upsets <span class="info-icon tiny" data-tip="Ranked by how unlikely the ELO model thought the win was. The percentage is the winner&#39;s pre-game win probability, from the two ratings going in: 1 / (1 + 10^((opponent rating - your rating) / 600)).">i</span></div>
+      ${upsets.map((e, i) => `<div>${i + 1}. <span class="num">${eloPct(e.winProb)}</span> — ${esc(firstName(e.owner))} beat ${esc(firstName(e.opponentLabel))} ${e.score.toFixed(1)}–${e.oppScore.toFixed(1)} <span class="meta">(${e.season} ${esc(e.weekLabel)})</span></div>`).join('')}
+    </div>`;
+
+}
