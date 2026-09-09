@@ -1638,3 +1638,154 @@ tr.elo-detail > td { padding: 0 !important; background: var(--bg3); }
   font-size: .55rem;
   margin-left: .25rem;
 }
+
+/* ── Survivor Pool ─────────────────────────────────
+   Hand-maintained picks (data/survivor.json) + live NFL results from ESPN.
+   Team block colors are each club's official palette (teampalettes.com/nfl);
+   a lost pick drops its color and gets struck through. The table is laid out
+   at a fixed width so the full 18-week season fits the card with no
+   horizontal scrolling on desktop; phones scroll sideways instead. */
+.survivor-summary {
+  display: flex;
+  gap: 1.5rem;
+  flex-wrap: wrap;
+  margin-bottom: 1rem;
+  font-size: .8rem;
+  color: var(--text2);
+  font-family: var(--font-mono);
+}
+.survivor-summary .sv-stat b { color: var(--accent); font-size: .95rem; }
+.survivor-summary .sv-stat-dim b { color: var(--text2); }
+.survivor-summary .sv-stat-warn { color: var(--accent2); }
+
+.survivor-wrap { padding: 1rem; overflow: hidden; }
+
+#survivor-table {
+  width: 100%;
+  table-layout: fixed;          /* 18 equal columns, sized to the card */
+  border-collapse: separate;
+  border-spacing: 2px;
+}
+
+#survivor-table th,
+#survivor-table td { padding: 0; border: none; background: none; }
+
+#survivor-table .sv-week-th {
+  font-family: var(--font-mono);
+  font-size: .55rem;
+  letter-spacing: .5px;
+  text-transform: uppercase;
+  color: var(--text3);
+  text-align: center;
+  padding: 0 0 .45rem;
+  white-space: nowrap;
+  overflow: hidden;
+}
+#survivor-table .sv-week-th.sv-week-current { color: var(--accent); }
+
+/* Manager name column — fixed share of the table, never squeezed out */
+/* Width is measured from the longest name at render time (fitNameColumn),
+   so the gap on the left matches the card padding on the right. This is the
+   fallback for the first paint / if measurement can't run. */
+#survivor-table .sv-name-col {
+  width: 64px;
+  padding-right: 10px;      /* must match GAP in fitNameColumn() */
+  text-align: right;
+  font-size: .78rem;
+  font-weight: 500;
+  color: var(--text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+#survivor-table .sv-name { display: inline-block; white-space: nowrap; }
+#survivor-table td.sv-name-col.sv-out { color: var(--text3); }
+#survivor-table td.sv-name-col.sv-winner {
+  color: var(--gold);
+  font-weight: 700;
+}
+
+/* Pick blocks */
+#survivor-table .sv-cell { vertical-align: middle; }
+
+.sv-pick {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0;
+  min-width: 0;
+  min-height: 46px;
+  padding: .3rem .15rem;
+  border-radius: 5px;
+  overflow: hidden;
+  cursor: default;
+  transition: transform .12s ease, filter .12s ease;
+}
+.sv-pick:hover { transform: translateY(-1px); filter: brightness(1.12); }
+
+.sv-abbr {
+  font-family: var(--font-body);
+  font-weight: 700;
+  font-size: .76rem;
+  letter-spacing: .3px;
+  line-height: 1.15;
+  color: #fff;
+  text-shadow: 0 1px 2px rgba(0,0,0,.45);
+}
+
+/* The two small lines: "17 - 34" then "@ NYG" */
+.sv-score, .sv-opp {
+  font-family: var(--font-mono);
+  font-size: .58rem;
+  line-height: 1.2;
+  letter-spacing: -.2px;
+  white-space: nowrap;
+  text-shadow: 0 1px 2px rgba(0,0,0,.5);
+}
+.sv-score { color: rgba(255,255,255,.95); }
+.sv-opp   { color: rgba(255,255,255,.72); }
+
+/* A losing pick: grey block, struck through — the elimination marker */
+.sv-pick.sv-lost { background: #3a4048; box-shadow: none; }
+.sv-pick.sv-lost .sv-abbr {
+  color: var(--text2);
+  text-decoration: line-through;
+  text-decoration-thickness: 1.5px;
+  text-shadow: none;
+}
+.sv-pick.sv-lost .sv-score { color: #97a3b4; text-shadow: none; }
+.sv-pick.sv-lost .sv-opp   { color: #79879a; text-shadow: none; }
+
+/* Game currently in progress */
+.sv-pick.sv-live { outline: 1px solid var(--accent); outline-offset: 1px; }
+.sv-pick.sv-live .sv-score { color: #fff; font-weight: 500; }
+
+/* Empty week slot */
+.sv-cell.sv-empty::after {
+  content: '';
+  display: block;
+  min-height: 46px;
+  border: 1px dashed var(--border);
+  border-radius: 5px;
+}
+
+/* Eliminated managers fade back a touch */
+#survivor-table tr.sv-out .sv-pick:not(.sv-lost) { opacity: .55; }
+
+/* Phones: 18 columns can't fit, so fall back to a horizontal scroll with the
+   manager names pinned to the left edge. */
+@media (max-width: 900px) {
+  .survivor-wrap { overflow-x: auto; -webkit-overflow-scrolling: touch; padding: .75rem; }
+  #survivor-table { width: max-content; table-layout: auto; }
+  #survivor-table .sv-week-th { min-width: 76px; }
+  .sv-pick, .sv-cell.sv-empty::after { min-width: 76px; }
+  #survivor-table .sv-name-col {
+    position: sticky;
+    left: 0;
+    z-index: 2;
+    background: var(--bg2);
+    font-size: .74rem;
+    padding-right: 10px;
+  }
+}

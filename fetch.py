@@ -1,15 +1,24 @@
 """
-fetch.py — Run this locally once a week to refresh your league data.
+fetch.py - Refresh the league data the site reads.
+
+Pulls a season from ESPN and writes data/{year}.json (plus data.json for
+backward compatibility). Run it locally once a week during the season, or let
+the GitHub Action in .github/workflows/ run it every Tuesday morning.
 
 Usage:
-    python fetch.py
+    python fetch.py                  # current season
+    python fetch.py --year 2024      # a past season
+    python fetch.py --help           # full options
 
 Requirements:
     pip install espn-api
 """
 
+import argparse
+import getpass
 import json
 import os
+import sys
 from datetime import datetime
 from espn_api.football import League
 
@@ -58,15 +67,260 @@ POS_NAME_TO_ID = {name: pid for pid, name in POSITION_MAP.items()}
 #   3. Copy espn_s2 and SWID values
 #   4. Update below AND in GitHub repo Settings → Secrets → Actions
 
-LEAGUE_ID = 12705243
-YEAR      = int(os.environ.get("YEAR"))
-ESPN_S2   = os.environ.get("ESPN_S2")
-SWID      = os.environ.get("SWID")
+DEFAULT_LEAGUE_ID = 12705243
+
+# Filled in by configure() from the command line / environment. They stay
+# module-level because main() and its helpers read them directly.
+LEAGUE_ID = DEFAULT_LEAGUE_ID
+YEAR      = None
+ESPN_S2   = None
+SWID      = None
+
+# Local credential file, kept next to this script and out of git. Written only
+# if you ask for it at the prompt; GitHub Actions never sees or needs it.
+ENV_FILE = os.path.join(os.path.dirname(os.path.abspath(__file__)), ".env")
+
+
+def load_env_file(path=ENV_FILE):
+    """Read simple KEY=VALUE lines from .env into a dict.
+
+    Real environment variables always win over this file, so a value exported
+    in the shell (or injected by GitHub Actions) is never shadowed by a stale
+    local copy.
+    """
+    values = {}
+    if not os.path.exists(path):
+        return values
+    try:
+        with open(path, encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if not line or line.startswith("#") or "=" not in line:
+                    continue
+                key, _, val = line.partition("=")
+                values[key.strip()] = val.strip().strip('"').strip("'")
+    except OSError as err:
+        print(f"  ! could not read {os.path.basename(path)}: {err}")
+    return values
+
+
+def save_env_file(values, path=ENV_FILE):
+    """Merge values into .env (0600) and make sure git ignores it."""
+    existing = load_env_file(path)
+    existing.update(values)
+    try:
+        with open(path, "w", encoding="utf-8") as f:
+            f.write("# Local credentials for fetch.py. Not committed - see .gitignore.\n")
+            for key in ("YEAR", "LEAGUE_ID", "ESPN_S2", "SWID"):
+                if existing.get(key):
+                    f.write(f"{key}={existing[key]}\n")
+        os.chmod(path, 0o600)
+    except OSError as err:
+        print(f"  ! could not write {os.path.basename(path)}: {err}")
+        return
+
+    ensure_gitignored(os.path.basename(path))
+    print(f"  saved to {os.path.basename(path)} - future local runs won't ask again")
+
+
+def ensure_gitignored(name):
+    """Append name to .gitignore if it isn't covered already."""
+    root = os.path.dirname(os.path.abspath(__file__))
+    path = os.path.join(root, ".gitignore")
+    try:
+        body = ""
+        if os.path.exists(path):
+            with open(path, encoding="utf-8") as f:
+                body = f.read()
+        if name in body.split():
+            return
+        with open(path, "a", encoding="utf-8") as f:
+            if body and not body.endswith("\n"):
+                f.write("\n")
+            f.write(f"{name}\n")
+        print(f"  added {name} to .gitignore")
+    except OSError as err:
+        print(f"  ! could not update .gitignore ({err}) - add {name} to it yourself")
+
+
+def is_interactive():
+    """True only when a human is actually sitting at the terminal.
+
+    GitHub Actions sets CI and gives the step no tty, so an automated run never
+    stops to ask - it fails loudly instead.
+    """
+    if os.environ.get("CI"):
+        return False
+    try:
+        return sys.stdin.isatty() and sys.stderr.isatty()
+    except (AttributeError, ValueError):
+        return False
+
+
+def default_season(today=None):
+    """The season currently in play.
+
+    An NFL season spans two calendar years - the 2025 season runs from
+    September 2025 into February 2026 - so anything before August belongs to
+    the previous season's year.
+    """
+    today = today or datetime.now()
+    return today.year if today.month >= 8 else today.year - 1
+
+
+def build_parser():
+    parser = argparse.ArgumentParser(
+        prog="fetch.py",
+        description=(
+            "Fetch one season of league data from ESPN and write it to "
+            "data/{year}.json (and data.json). Run this, then commit the "
+            "result - the site reads those files directly and never calls "
+            "ESPN from the browser."
+        ),
+        epilog=(
+            "settings are resolved in this order:\n"
+            "  command line -> environment -> .env file -> interactive prompt\n"
+            "\n"
+            "  On GitHub Actions the repo secrets arrive as environment\n"
+            "  variables, so a scheduled run resolves everything silently and\n"
+            "  never blocks. Run it yourself in a terminal and anything missing\n"
+            "  is prompted for, with the option to remember it in .env\n"
+            "  (gitignored, chmod 600).\n"
+            "\n"
+            "environment variables:\n"
+            "  ESPN_S2, SWID   Login cookies. Required for a private league.\n"
+            "                  Get them from fantasy.espn.com: DevTools ->\n"
+            "                  Application -> Cookies -> fantasy.espn.com.\n"
+            "  YEAR            Season to fetch, if --year is not passed.\n"
+            "  LEAGUE_ID       League to fetch, if --league-id is not passed.\n"
+            "  CI              If set, never prompt (fail on missing values).\n"
+            "\n"
+            "examples:\n"
+            "  python fetch.py                   fetch the current season\n"
+            "  python fetch.py --year 2024       backfill a past season\n"
+            "  python fetch.py --year 2024 --dry-run\n"
+            "                                    check credentials, write nothing\n"
+            "\n"
+            "note: data/survivor.json is hand-maintained and is never touched\n"
+            "      by this script.\n"
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+    )
+    parser.add_argument(
+        "-y", "--year", type=int, metavar="YYYY",
+        help="season to fetch (default: $YEAR, else the season in play now)",
+    )
+    parser.add_argument(
+        "-l", "--league-id", type=int, metavar="ID",
+        help=f"ESPN league id (default: $LEAGUE_ID, else {DEFAULT_LEAGUE_ID})",
+    )
+    parser.add_argument(
+        "-n", "--dry-run", action="store_true",
+        help="fetch and report, but do not write any files",
+    )
+    parser.add_argument(
+        "--no-prompt", action="store_true",
+        help="never ask interactively; fail if a credential is missing",
+    )
+    return parser
+
+
+def configure(args):
+    """Resolve settings, in order: command line, environment, .env, then ask.
+
+    In GitHub Actions the repo secrets (ESPN_S2, SWID, YEAR) arrive as
+    environment variables, so everything resolves silently and the run never
+    blocks. Locally, anything still missing is prompted for.
+    """
+    global LEAGUE_ID, YEAR, ESPN_S2, SWID
+
+    file_env = load_env_file()
+
+    def lookup(key):
+        return os.environ.get(key) or file_env.get(key)
+
+    def source_of(key):
+        return "env" if os.environ.get(key) else ".env"
+
+    interactive = is_interactive() and not args.no_prompt
+    prompted = {}
+    missing = []
+
+    # ── Season ────────────────────────────────────────────────────────────────
+    env_year = lookup("YEAR")
+    if args.year is not None:
+        YEAR, source = args.year, "--year"
+    elif env_year:
+        try:
+            YEAR = int(env_year)
+        except ValueError:
+            sys.exit(f"YEAR must be a 4-digit year, got {env_year!r}")
+        source = f"${{YEAR}} ({source_of('YEAR')})"
+    else:
+        guess = default_season()
+        if interactive:
+            answer = input(f"Season year [{guess}]: ").strip()
+            YEAR = int(answer) if answer.isdigit() else guess
+            if answer.isdigit():
+                prompted["YEAR"] = str(YEAR)
+            source = "prompt"
+        else:
+            YEAR, source = guess, "current season"
+
+    if YEAR < 2000 or YEAR > datetime.now().year + 1:
+        sys.exit(f"{YEAR} does not look like a season year (from {source})")
+
+    # ── League ────────────────────────────────────────────────────────────────
+    env_league = lookup("LEAGUE_ID")
+    if args.league_id is not None:
+        LEAGUE_ID = args.league_id
+    elif env_league:
+        try:
+            LEAGUE_ID = int(env_league)
+        except ValueError:
+            sys.exit(f"LEAGUE_ID must be a number, got {env_league!r}")
+
+    # ── Credentials ───────────────────────────────────────────────────────────
+    for key in ("ESPN_S2", "SWID"):
+        value = lookup(key)
+        if value:
+            globals()[key] = value
+            continue
+        if interactive:
+            value = getpass.getpass(f"{key} (paste from your browser cookies, hidden): ").strip()
+            if value:
+                globals()[key] = value
+                prompted[key] = value
+            else:
+                missing.append(key)
+        else:
+            missing.append(key)
+
+    if missing and not interactive:
+        sys.exit(
+            "Missing " + ", ".join(missing) + ".\n"
+            "  In GitHub Actions: add them under Settings -> Secrets and variables\n"
+            "    -> Actions, and pass them through as env: in the workflow.\n"
+            "  Locally: run this from a terminal and it will prompt you, or export\n"
+            "    them first, or put them in a .env file next to fetch.py."
+        )
+    if missing:
+        print("  ! " + ", ".join(missing) + " left blank - this only works if the league is public.")
+
+    # ── Offer to remember what we just asked for ─────────────────────────────
+    if prompted and interactive:
+        answer = input(f"Save these to {os.path.basename(ENV_FILE)} so you aren't asked again? [y/N]: ")
+        if answer.strip().lower().startswith("y"):
+            save_env_file(prompted)
+
+    return source
+
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main():
-    print(f"Fetching ESPN data for league {LEAGUE_ID}, season {YEAR}...")
+def main(source="", dry_run=False):
+    label = f" (from {source})" if source else ""
+    print(f"Fetching ESPN data for league {LEAGUE_ID}, season {YEAR}{label}...")
 
     league = League(
         league_id=LEAGUE_ID,
@@ -426,9 +680,15 @@ def main():
         "trades":         trades,
     }
 
+    year_path = f"data/{YEAR}.json"
+
+    if dry_run:
+        print(f"\n(dry run) would write {year_path} and data.json "
+              f"- {len(teams)} teams, {len(schedule)} weeks")
+        return
+
     # Write to data/{year}.json (primary) and data.json (backward compat)
     os.makedirs("data", exist_ok=True)
-    year_path = f"data/{YEAR}.json"
     with open(year_path, "w") as f:
         json.dump(output, f, indent=2)
 
@@ -442,10 +702,6 @@ def main():
     print("  git push")
 
 if __name__ == "__main__":
-    import sys
-    # Allow --year flag to override: python fetch.py --year 2024
-    if "--year" in sys.argv:
-        idx = sys.argv.index("--year")
-        if idx + 1 < len(sys.argv):
-            YEAR = int(sys.argv[idx + 1])
-    main()
+    args = build_parser().parse_args()
+    source = configure(args)
+    main(source=source, dry_run=args.dry_run)

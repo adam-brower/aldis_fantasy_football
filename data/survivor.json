@@ -1,0 +1,66 @@
+{
+  "_readme": [
+    "SURVIVOR POOL — hand-edited. fetch.py never touches this file.",
+    "",
+    "HOW TO UPDATE EACH WEEK — just add the team code, nothing else:",
+    "  1. Find the season below (e.g. \"2025\" = the 2025-26 season).",
+    "  2. Append the manager's new pick to the end of their 'picks' array.",
+    "     The position in the array IS the NFL week (1st entry = Week 1).",
+    "  3. A pick is just:  { \"team\": \"KC\" }",
+    "  4. That's it. The site pulls the opponent, the final score and the",
+    "     win/loss straight from ESPN's public NFL scoreboard when the page",
+    "     loads, so the block fills in as 'KC 27 - 20 LV' on its own and the",
+    "     manager is struck through automatically if the pick lost.",
+    "  5. For a manager who skipped a week, put null in that slot: [ {...}, null, {...} ].",
+    "  6. Once a manager is eliminated, just stop adding picks for them.",
+    "",
+    "OPTIONAL OVERRIDES (only if ESPN has it wrong, or for an offline copy).",
+    "Anything you write by hand always beats the live data:",
+    "  \"score\":    \"17-34\"  — picked team's points FIRST",
+    "  \"opponent\": \"NYG\"",
+    "  \"lost\":     true      — force eliminated (false forces survived)",
+    "",
+    "\"winner\": \"Tom\" marks whoever won the pool — their name turns gold with a",
+    "trophy. Leave it \"\" while the season is still running.",
+    "",
+    "STARTING A NEW SEASON: copy a season block, change the key to the new year,",
+    "empty every 'picks' array, and update the 'managers' list if the group changed.",
+    "",
+    "VALID TEAM CODES: ARI ATL BAL BUF CAR CHI CIN CLE DAL DEN DET GB HOU IND JAX KC",
+    "LV LAC LAR MIA MIN NE NO NYG NYJ PHI PIT SEA SF TB TEN WAS",
+    "(Common aliases also work: ARZ, GNB, KAN, LVR, SFO, TAM, NOR, WSH, JAC, NWE.)"
+  ],
+
+  "seasons": {
+    "2025": {
+      "label": "2025-26",
+      "weeks": 18,
+      "winner": "Adam",
+      "managers": [
+        { "name": "Dennis", "picks": [ { "team": "MIN" }, { "team": "TEN" } ]},
+        { "name": "Adam",   "picks": [ { "team": "ARI" }, { "team": "SF" }, { "team": "KC" }, { "team": "BUF" }, { "team": "DET" }, { "team": "PHI" } ]},
+        { "name": "Macks",  "picks": [ { "team": "CIN" }, { "team": "ARI" }, { "team": "GB" } ]},
+        { "name": "Jrod",   "picks": [ { "team": "KC" } ]},
+        { "name": "Evan",   "picks": [ { "team": "CIN" }, { "team": "SF" }, { "team": "GB" } ]},
+        { "name": "Jake",   "picks": [ { "team": "PHI" }, { "team": "DAL" }, { "team": "SEA" }, { "team": "DEN" }, { "team": "LAC" } ]},
+        { "name": "Luca",   "picks": [ { "team": "NYG" } ]},
+        { "name": "Tom",    "picks": [ { "team": "WAS" }, { "team": "DAL" }, { "team": "HOU" } ]}
+      ]
+    },
+    "2026": {
+      "label": "2026-27",
+      "weeks": 18,
+      "winner": "",
+      "managers": [
+        { "name": "Dennis", "picks": [ { "team": "LAR" } ]},
+        { "name": "Adam",   "picks": [ { "team": "JAX" } ]},
+        { "name": "Macks",  "picks": [ { "team": "DET" } ]},
+        { "name": "Jrod",   "picks": [ { "team": "KC" }  ]},
+        { "name": "Evan",   "picks": [ { "team": "CIN" } ]},
+        { "name": "Jake",   "picks": [ { "team": "LAC" } ]},
+        { "name": "Luca",   "picks": [ { "team": "GB" }  ]},
+        { "name": "Tom",    "picks": [ { "team": "NYJ" } ]}
+      ]
+    }
+  }
+}

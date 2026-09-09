@@ -24,6 +24,7 @@ import {
   computeScheduleKarma,
 } from './stats.js';
 import { computeSeasonElo, computeCareerElo, ELO_DEFAULTS } from './elo.js';
+import { renderSurvivor } from './survivor.js';
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let APP = {};
@@ -197,6 +198,13 @@ async function boot(data) {
 
   renderStandings();
   renderWeeklyScores();
+
+  // Survivor pool — hand-maintained in data/survivor.json, hides itself if
+  // that season has no entry. Async so it never blocks the rest of the render.
+  renderSurvivor(data.meta?.season ?? null).catch(err => {
+    console.warn('Survivor pool did not render:', err);
+    document.getElementById('sec-survivor').style.display = 'none';
+  });
 
   // Matchups + H2H — every season has real data now, so always show
   document.getElementById('sec-matchups').style.display = '';
@@ -2252,6 +2260,7 @@ function renderTradeCard(tr, idx, teamById) {
     // Skip wraps that have opted out of auto-scaling (e.g. karma-detail
     // tables which use horizontal scrolling instead).
     if (wrap.closest('.karma-detail')) return;
+    if (wrap.classList.contains('no-scale')) return;
     const table = wrap.querySelector('table');
     if (!table) return;
 
