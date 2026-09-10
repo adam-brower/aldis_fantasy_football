@@ -55,8 +55,8 @@
         { "name": "Dennis", "picks": [ { "team": "LAR" } ]},
         { "name": "Adam",   "picks": [ { "team": "JAX" } ]},
         { "name": "Macks",  "picks": [ { "team": "DET" } ]},
-        { "name": "Jrod",   "picks": [ { "team": "KC" }  ]},
-        { "name": "Evan",   "picks": [ { "team": "CIN" } ]},
+        { "name": "Jrod",   "picks": [ { "team": "CHI" }  ]},
+        { "name": "Evan",   "picks": [ { "team": "GB" } ]},
         { "name": "Jake",   "picks": [ { "team": "LAC" } ]},
         { "name": "Luca",   "picks": [ { "team": "GB" }  ]},
         { "name": "Tom",    "picks": [ { "team": "NYJ" } ]}
