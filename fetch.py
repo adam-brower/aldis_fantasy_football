@@ -222,6 +222,15 @@ def build_parser():
         "--no-prompt", action="store_true",
         help="never ask interactively; fail if a credential is missing",
     )
+    parser.add_argument(
+        "--skip-records", action="store_true",
+        help=(
+            "keep the wins/losses/ties already on disk instead of overwriting "
+            "them with ESPN's current values; scores/schedule/etc still refresh "
+            "normally. Used by the Mon/Fri workflow runs so team records only "
+            "change once the week closes on the Tuesday run."
+        ),
+    )
     return parser
 
 
@@ -318,7 +327,7 @@ def configure(args):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 
-def main(source="", dry_run=False):
+def main(source="", dry_run=False, skip_records=False):
     label = f" (from {source})" if source else ""
     print(f"Fetching ESPN data for league {LEAGUE_ID}, season {YEAR}{label}...")
 
@@ -333,16 +342,40 @@ def main(source="", dry_run=False):
 
     # ── Teams ─────────────────────────────────────────────────────────────────
     print("  → Parsing teams...")
+
+    # When --skip-records is set (the Mon/Fri workflow runs), the win/loss/tie
+    # columns are frozen at whatever's already committed for this season, so
+    # standings only move on the Tuesday run once the week is officially over.
+    # Everything else (scores, schedule, power rankings, etc.) still refreshes.
+    frozen_records = {}
+    if skip_records:
+        existing_path = f"data/{YEAR}.json"
+        try:
+            with open(existing_path, encoding="utf-8") as f:
+                existing_data = json.load(f)
+            for et in existing_data.get("teams", []):
+                frozen_records[et["id"]] = {
+                    "wins":   et.get("wins"),
+                    "losses": et.get("losses"),
+                    "ties":   et.get("ties"),
+                }
+            print(f"     --skip-records: loaded {len(frozen_records)} teams' records from {existing_path}")
+        except FileNotFoundError:
+            print(f"     --skip-records: no {existing_path} yet, using live ESPN records for this run")
+        except (json.JSONDecodeError, KeyError) as e:
+            print(f"     ⚠ --skip-records: could not read {existing_path} ({e}); using live ESPN records")
+
     teams = []
     for t in league.teams:
+        frozen = frozen_records.get(t.team_id)
         teams.append({
             "id":            t.team_id,
             "name":          t.team_name,
             "abbrev":        t.team_abbrev,
             "owner":         f"{t.owners[0].get('firstName','')} {t.owners[0].get('lastName','')}".strip() if t.owners else "Unknown",
-            "wins":          t.wins,
-            "losses":        t.losses,
-            "ties":          t.ties,
+            "wins":          frozen["wins"]   if frozen else t.wins,
+            "losses":        frozen["losses"] if frozen else t.losses,
+            "ties":          frozen["ties"]   if frozen else t.ties,
             "pointsFor":     t.points_for,
             "pointsAgainst": t.points_against,
             "playoffSeed":   t.playoff_pct,
@@ -704,4 +737,4 @@ def main(source="", dry_run=False):
 if __name__ == "__main__":
     args = build_parser().parse_args()
     source = configure(args)
-    main(source=source, dry_run=args.dry_run)
+    main(source=source, dry_run=args.dry_run, skip_records=args.skip_records)

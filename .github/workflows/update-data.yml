@@ -1,10 +1,25 @@
 name: Update League Data
 
 on:
-  # Run every Tuesday at 8 AM UTC (during season, after Monday Night Football),
-  # but ONLY during fantasy season — months 9, 10, 11, 12 (Sep–Dec) and 1, 2 (Jan–Feb).
+  # Runs three times a week during fantasy season (Sep-Feb): Friday, Monday,
+  # and Tuesday at 12AM ET. Cron is UTC-only, so this is pinned to 05:00 UTC
+  # (= 12AM EST). During EDT (early Sep - first Sun of Nov) that lands at
+  # 1AM ET instead of 12AM — a one-hour drift, same tradeoff the old
+  # Tuesday-only schedule made.
+  #
+  # Only the Tuesday run refreshes win/loss/tie records (the week is fully
+  # over by then); the Friday and Monday runs pass --skip-records to fetch.py
+  # so standings don't move mid-week. See the "Fetch latest league data" step.
+#    .---------------- minute (0 - 59)
+#  |  .------------- hour (0 - 23)
+#  |  |  .---------- day of month (1 - 31)
+#  |  |  |  .------- month (1 - 12 or JAN-DEC)
+#  |  |  |  |  .---- day of week (0 - 6 or SUN-SAT; 0 or 7 is Sunday)
+#  |  |  |  |  |
+#  *  *  *  *  *
   schedule:
-    - cron: '0 8 * 9-12,1-2 2'
+    - cron: '0 5 * 9-12,1-2 2'    # Tuesday - full update incl. win/loss records
+    - cron: '0 5 * 9-12,1-2 1,5'  # Monday & Friday - scores/schedule only
   # Allow manual trigger from GitHub UI (works year-round, regardless of month)
   workflow_dispatch:
     inputs:
@@ -36,12 +51,22 @@ jobs:
           # YEAR comes from the repo secret. If you trigger the workflow
           # manually with a `year` input, that overrides the secret.
           YEAR:    ${{ github.event.inputs.year != '' && github.event.inputs.year || secrets.YEAR }}
+          # Only the Tuesday schedule entry updates win/loss/tie records;
+          # every other trigger (Mon/Fri schedule, manual dispatch) leaves
+          # them frozen at whatever's already committed.
+          IS_TUESDAY_RUN: ${{ github.event.schedule == '0 5 * 9-12,1-2 2' }}
         run: |
           if [ -z "$YEAR" ]; then
             echo "::error::YEAR is not set. Add it as a repo secret (Settings → Secrets and variables → Actions → New repository secret), or pass it as a manual input."
             exit 1
           fi
-          python fetch.py
+          if [ "$IS_TUESDAY_RUN" = "true" ]; then
+            echo "Tuesday run: updating scores, schedule, and win/loss records"
+            python fetch.py
+          else
+            echo "Mon/Fri run: updating scores/schedule only, freezing win/loss records"
+            python fetch.py --skip-records
+          fi
 
       - name: Commit and push if data changed
         run: |
