@@ -962,6 +962,7 @@ export function resolveActualBracket(schedule, weekGroups, teams, seeded, regWee
       const team = teams.find(t => t.id === id);
       return team?.playoffSeed ?? seeded.findIndex(s => s.id === id) + 1;
     });
+    console.log('side avg', seeds, [...teamIds], seeds.reduce((a,b)=>a+b,0)/seeds.length);
     return seeds.reduce((a, b) => a + b, 0) / seeds.length;
   }
 

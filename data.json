@@ -165,7 +165,8 @@
       "ties": 0,
       "pointsFor": 518.1,
       "pointsAgainst": 546.54,
-      "playoffSeed": 57.699999999999996
+      "playoffSeed": 0,
+      "playoffPct": 57.699999999999996
     },
     {
       "id": 2,
@@ -177,7 +178,8 @@
       "ties": 0,
       "pointsFor": 489.9,
       "pointsAgainst": 508.62,
-      "playoffSeed": 42.775
+      "playoffSeed": 0,
+      "playoffPct": 42.775
     },
     {
       "id": 3,
@@ -189,7 +191,8 @@
       "ties": 0,
       "pointsFor": 548.2199999999999,
       "pointsAgainst": 500.58,
-      "playoffSeed": 73.775
+      "playoffSeed": 0,
+      "playoffPct": 73.775
     },
     {
       "id": 4,
@@ -201,7 +204,8 @@
       "ties": 0,
       "pointsFor": 558.4,
       "pointsAgainst": 393.98,
-      "playoffSeed": 86.25
+      "playoffSeed": 0,
+      "playoffPct": 86.25
     },
     {
       "id": 5,
@@ -213,7 +217,8 @@
       "ties": 0,
       "pointsFor": 519.44,
       "pointsAgainst": 536.64,
-      "playoffSeed": 46.650000000000006
+      "playoffSeed": 0,
+      "playoffPct": 46.650000000000006
     },
     {
       "id": 6,
@@ -225,7 +230,8 @@
       "ties": 0,
       "pointsFor": 505.38000000000005,
       "pointsAgainst": 527.5,
-      "playoffSeed": 35.125
+      "playoffSeed": 0,
+      "playoffPct": 35.125
     },
     {
       "id": 7,
@@ -237,7 +243,8 @@
       "ties": 0,
       "pointsFor": 528.04,
       "pointsAgainst": 528.46,
-      "playoffSeed": 28.975
+      "playoffSeed": 0,
+      "playoffPct": 28.975
     },
     {
       "id": 8,
@@ -249,7 +256,8 @@
       "ties": 0,
       "pointsFor": 443.82,
       "pointsAgainst": 568.98,
-      "playoffSeed": 28.749999999999996
+      "playoffSeed": 0,
+      "playoffPct": 28.749999999999996
     }
   ],
   "schedule": {

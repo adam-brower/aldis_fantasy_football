@@ -378,7 +378,10 @@ def main(source="", dry_run=False, skip_records=False):
             "ties":          frozen["ties"]   if frozen else t.ties,
             "pointsFor":     t.points_for,
             "pointsAgainst": t.points_against,
-            "playoffSeed":   t.playoff_pct,
+            # playoff_pct is ESPN's playoff *probability* (0-100), NOT a seed.
+            # Leave playoffSeed at 0 so the site derives seeding from standings.
+            "playoffSeed":   0,
+            "playoffPct":    t.playoff_pct,
         })
 
     # ── Build league scoring rules: stat_id → multiplier (with position overrides) ─
