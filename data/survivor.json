@@ -50,11 +50,11 @@
     "2026": {
       "label": "2026-27",
       "weeks": 18,
-      "winner": "",
+      "winner": "Macks",
       "managers": [
         { "name": "Dennis", "picks": [ { "team": "LAR" } ]},
         { "name": "Adam",   "picks": [ { "team": "JAX" }, { "team": "TB" } ]},
-        { "name": "Macks",  "picks": [ { "team": "DET" }, { "team": "SF" } ]},
+        { "name": "Macks",  "picks": [ { "team": "DET" }, { "team": "SF" }, { "team": "KC" }, { "team": "BAL" }, { "team": "JAX" } ]},
         { "name": "Jrod",   "picks": [ { "team": "CHI" }, { "team": "TB" }  ]},
         { "name": "Evan",   "picks": [ { "team": "GB" } ]},
         { "name": "Jake",   "picks": [ { "team": "LAC" } ]},
