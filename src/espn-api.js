@@ -80,6 +80,8 @@ export async function fetchLeagueData(year) {
     settings: data.settings,
     powerRankings: data.powerRankings ?? null,
     trades: data.trades ?? [],
+    // Last week closed out by the Tuesday run (null for older files = all final)
+    finalizedWeek: data.finalizedWeek ?? null,
     meta: {
       lastUpdated: data.lastUpdated,
       season: data.season,

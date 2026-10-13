@@ -53,6 +53,20 @@ export function getCompletedWeeks(schedule, regularSeasonWeeks = 14) {
 }
 
 /**
+ * Return a copy of the schedule containing only weeks that are finalized
+ * (week <= finalizedWeek). The Tuesday data pull sets finalizedWeek; Mon/Fri
+ * pulls leave it alone, so stats built on this (xW, schedule karma, ELO) only
+ * move once a week is officially over — same as the W/L records.
+ * A null/undefined finalizedWeek means every week is final (historical data).
+ */
+export function finalizedSchedule(schedule, finalizedWeek) {
+  if (finalizedWeek == null) return schedule;
+  return Object.fromEntries(
+    Object.entries(schedule).filter(([week]) => Number(week) <= finalizedWeek)
+  );
+}
+
+/**
  * Return ALL completed weeks (regular season + playoffs), with consecutive
  * duplicate weeks removed. ESPN sometimes exposes a 2-week championship round
  * as two identical week entries — including both would double-count.

@@ -348,6 +348,7 @@ def main(source="", dry_run=False, skip_records=False):
     # standings only move on the Tuesday run once the week is officially over.
     # Everything else (scores, schedule, power rankings, etc.) still refreshes.
     frozen_records = {}
+    frozen_finalized_week = None
     if skip_records:
         existing_path = f"data/{YEAR}.json"
         try:
@@ -359,6 +360,15 @@ def main(source="", dry_run=False, skip_records=False):
                     "losses": et.get("losses"),
                     "ties":   et.get("ties"),
                 }
+            # The last week that was closed out by a Tuesday run. Older files
+            # predate this field, so fall back to games played from the frozen
+            # records (W+L+T), which is the same thing for the regular season.
+            frozen_finalized_week = existing_data.get("finalizedWeek")
+            if frozen_finalized_week is None and frozen_records:
+                frozen_finalized_week = max(
+                    (r["wins"] or 0) + (r["losses"] or 0) + (r["ties"] or 0)
+                    for r in frozen_records.values()
+                )
             print(f"     --skip-records: loaded {len(frozen_records)} teams' records from {existing_path}")
         except FileNotFoundError:
             print(f"     --skip-records: no {existing_path} yet, using live ESPN records for this run")
@@ -514,6 +524,23 @@ def main(source="", dry_run=False, skip_records=False):
             })
         schedule[str(week)] = week_matchups
         print(f"     Week {week}: {len(week_matchups)} matchups")
+
+    # ── Finalized week ────────────────────────────────────────────────────────
+    # Highest week whose results are locked in. Like the W/L records, this only
+    # advances on the Tuesday run; Mon/Fri (--skip-records) runs carry the
+    # previous value forward. The site uses it to keep xW, schedule karma and
+    # ELO from counting a week that's still being played.
+    weeks_with_scores = [
+        int(w) for w, ms in schedule.items()
+        if any((m["homeScore"] or 0) > 0 or (m["awayScore"] or 0) > 0 for m in ms)
+    ]
+    live_finalized_week = max(weeks_with_scores, default=0)
+    if frozen_finalized_week is not None:
+        finalized_week = frozen_finalized_week
+        print(f"  → Finalized week (frozen): {finalized_week}")
+    else:
+        finalized_week = live_finalized_week
+        print(f"  → Finalized week: {finalized_week}")
 
     # ── Settings ──────────────────────────────────────────────────────────────
     settings = {
@@ -709,6 +736,7 @@ def main(source="", dry_run=False, skip_records=False):
         "season":         YEAR,
         "leagueId":       LEAGUE_ID,
         "settings":       settings,
+        "finalizedWeek":  finalized_week,
         "scoringRules":   scoring_rules,
         "teams":          teams,
         "schedule":       schedule,

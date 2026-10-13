@@ -22,6 +22,7 @@ import {
   seedingOrder,
   computeTotalTouchdowns,
   computeScheduleKarma,
+  finalizedSchedule,
 } from './stats.js';
 import { computeSeasonElo, computeCareerElo, ELO_DEFAULTS } from './elo.js';
 import { renderSurvivor } from './survivor.js';
@@ -83,13 +84,22 @@ async function boot(data) {
   const weekGroups     = getWeekGroups(schedule, { combineWeeks });
   const allCanonical   = weekGroups.map(g => g.canonicalWeek);
 
+  // Weeks locked in by the Tuesday pull. W/L records only change on that run,
+  // so xW, schedule karma and ELO use these too — an in-progress week is
+  // still shown in scores/matchups but doesn't move those stats yet.
+  const finalizedWeek = data.finalizedWeek ?? null;
+  const isFinal       = w => finalizedWeek == null || w <= finalizedWeek;
+  const finalWeeks    = completedWeeks.filter(isFinal);
+  const finalGroups   = weekGroups.filter(g => g.weeks.every(isFinal));
+  const finalSched    = finalizedSchedule(schedule, finalizedWeek);
+
   const biweeklyScores = computeBiweeklyScores(weeklyScores, teams, completedWeeks);
-  const { xW, xWByWeek, xWCumByWeek } = computeExpectedWins(weeklyScores, teams, completedWeeks);
+  const { xW, xWByWeek, xWCumByWeek } = computeExpectedWins(weeklyScores, teams, finalWeeks);
   const h2hRecords = computeH2HRecords(weeklyScores, teams, completedWeeks);
   const actualWins = countActualWins(schedule, teams, completedWeeks);
 
   // Regular-season scaled xW for the default standings view (consistent with Power Rankings)
-  const regGroups = completedWeeks.map(w => ({ canonicalWeek: w, weeks: [w], combined: false, label: `Wk ${w}` }));
+  const regGroups = finalWeeks.map(w => ({ canonicalWeek: w, weeks: [w], combined: false, label: `Wk ${w}` }));
   const regPyth = computePythagoreanXW(teams, schedule, regGroups);
   const seasonSummary = teams.map(t => {
     const pf = completedWeeks.reduce((s, w) => s + (weeklyScores[t.id]?.[w] ?? 0), 0);
@@ -104,19 +114,19 @@ async function boot(data) {
       wins: w,
       losses: l,
       xW: regPyth.xW[t.id] ?? 0,
-      xL: completedWeeks.length - (regPyth.xW[t.id] ?? 0),
+      xL: finalWeeks.length - (regPyth.xW[t.id] ?? 0),
     };
   });
-  const karma = computeScheduleKarma(schedule, weeklyScores, teams, completedWeeks);
+  const karma = computeScheduleKarma(schedule, weeklyScores, teams, finalWeeks);
   const weekMinMax = getWeeklyMinMax(weeklyScores, teams, allCanonical);
 
   // ── Full season scaled xW (treats Wks 16-17 as 1 game) for Power Rankings & full standings
-  const pyth = computePythagoreanXW(teams, schedule, weekGroups);
-  const actualWinsAll = countActualWinsByGroup(schedule, teams, weekGroups);
+  const pyth = computePythagoreanXW(teams, schedule, finalGroups);
+  const actualWinsAll = countActualWinsByGroup(schedule, teams, finalGroups);
   const powerRanks = teams.map(t => ({
     team: t,
     xW: pyth.xW[t.id] ?? 0,
-    xL: weekGroups.length - (pyth.xW[t.id] ?? 0),
+    xL: finalGroups.length - (pyth.xW[t.id] ?? 0),
   })).sort((a, b) => b.xW - a.xW).map((e, i) => ({ ...e, rank: i + 1 }));
 
   // For the standings playoff-include toggle, build a scaled-xW-based summary
@@ -133,7 +143,7 @@ async function boot(data) {
     // Use stored totalWins/totalLosses for historical years (fake reg pairings make
     // schedule-derived wins unreliable), otherwise compute from actual matchup results
     const w = (t.totalWins != null) ? t.totalWins : (actualWinsAll[t.id] ?? 0);
-    const l = (t.totalLosses != null) ? t.totalLosses : (weekGroups.length - w);
+    const l = (t.totalLosses != null) ? t.totalLosses : (finalGroups.length - w);
     return {
       team: t,
       totalPts: pf,
@@ -142,7 +152,7 @@ async function boot(data) {
       wins: w,
       losses: l,
       xW: pyth.xW[t.id] ?? 0,
-      xL: weekGroups.length - (pyth.xW[t.id] ?? 0),
+      xL: finalGroups.length - (pyth.xW[t.id] ?? 0),
     };
   });
 
@@ -167,7 +177,7 @@ async function boot(data) {
   const actualBracket = resolveActualBracket(schedule, weekGroups, teams, regSeed, regWeeks);
 
   // ── Season ELO — everyone resets to 1000 in week 1 of this season ─────────
-  const seasonElo = computeSeasonElo(schedule, teams, settings, data.meta?.season ?? null);
+  const seasonElo = computeSeasonElo(finalSched, teams, settings, data.meta?.season ?? null);
 
   // Trade data passed through from data.json
   const trades = data.trades ?? [];
@@ -189,6 +199,7 @@ async function boot(data) {
   const hasTrades = Array.isArray(data.trades) && data.trades.length > 0;
 
   APP = { teams, teamById, schedule, settings, weeklyScores, biweeklyScores, completedWeeks,
+          finalizedWeek, finalWeeks, finalGroups,
           xW, xWByWeek, xWCumByWeek, h2hRecords, extremes, powerRanks, actualWins,
           seasonSummary, karma, powerRankings, regWeeks,
           weekGroups, allCanonical, weekMinMax,
@@ -271,14 +282,17 @@ async function bootAllTime(seasons) {
   // ── Aggregate data by owner ───────────────────────────────────────────────
   const ownerStats = {};  // { owner: { seasons, totalWins, totalLosses, totalPF, ... } }
   const allWeekScores = []; // { owner, team, season, week, score }
-  const allMatchups = [];   // { season, week, homeOwner, awayOwner, homeScore, awayScore }
+  const allMatchups = [];   // GAMES: { season, week, homeOwner, awayOwner, homeScore, awayScore } — 2-wk playoff rounds summed into one
+  const allWeekGames = [];  // PER-WEEK matchups: every individual week is its own entry (used for single-game score records)
   const championships = []; // { season, champion, runnerUp, champScore, runnerUpScore }
   const finalStandings = []; // { season, standings: [{owner, place}] }
 
   allData.forEach((data, idx) => {
     const season = data.meta?.season ?? seasons[idx];
     const teams = data.teams;
-    const schedule = data.schedule;
+    // Only finalized weeks count toward all-time records — keeps live,
+    // in-progress scores (Fri/Mon pulls) out of the record lists and career W/L.
+    const schedule = finalizedSchedule(data.schedule, data.finalizedWeek);
     const settings = data.settings;
     const regWeeks = settings?.regularSeasonWeeks ?? 14;
     const combineWeeks = settings?.combineWeeks ?? [[16,17]];
@@ -318,6 +332,13 @@ async function bootAllTime(seasons) {
         if (m.awayScore > 0) {
           const ao = teamOwner[m.awayTeamId];
           if (ao) allWeekScores.push({ owner: ao, team: teamName[m.awayTeamId], season, week: w, score: m.awayScore });
+        }
+        // Per-week matchup entry — includes each week of a 2-week playoff
+        // round individually so playoff weeks show up in single-game records.
+        const hOwn = teamOwner[m.homeTeamId];
+        const aOwn = teamOwner[m.awayTeamId];
+        if (hOwn && aOwn && m.homeScore > 0 && m.awayScore > 0) {
+          allWeekGames.push({ season, week: w, weekLabel: `Wk ${w}`, homeOwner: hOwn, awayOwner: aOwn, homeScore: m.homeScore, awayScore: m.awayScore });
         }
       });
     });
@@ -462,10 +483,14 @@ async function bootAllTime(seasons) {
   const topWeekScores = [...allWeekScores].sort((a,b) => b.score - a.score).slice(0, 10);
   const bottomWeekScores = [...allWeekScores].sort((a,b) => a.score - b.score).slice(0, 10);
 
-  // Biggest blowouts / closest games / H2H — include every season now that
-  // 2023 and 2024 have real reg-season matchup pairings wired in.
+  // Single-game score records (blowouts, closest, combined, high-loss,
+  // low-win) are evaluated PER WEEK. Each week of a 2-week playoff round is
+  // its own entry, so playoff weeks are included and summed 2-week totals
+  // don't distort the lists. W/L, H2H and streaks still use allMatchups
+  // (one entry per game).
   const realMatchups = allMatchups;
-  const blowouts = realMatchups.map(m => ({
+  const weekGames = allWeekGames;
+  const blowouts = weekGames.map(m => ({
     ...m,
     margin: Math.abs(m.homeScore - m.awayScore),
     winner: m.homeScore > m.awayScore ? m.homeOwner : m.awayOwner,
@@ -475,7 +500,7 @@ async function bootAllTime(seasons) {
   })).sort((a,b) => b.margin - a.margin).slice(0, 10);
 
   // Closest games
-  const closestGames = realMatchups
+  const closestGames = weekGames
     .filter(m => m.homeOwner !== m.awayOwner)
     .map(m => ({
       ...m,
@@ -486,9 +511,9 @@ async function bootAllTime(seasons) {
       loseScore: Math.min(m.homeScore, m.awayScore),
     })).sort((a,b) => a.margin - b.margin).slice(0, 10);
 
-  // Highest combined score in a single matchup (exclude combined weeks)
-  const highestCombined = realMatchups
-    .filter(m => m.homeOwner !== m.awayOwner && !m.weekLabel.includes('-'))
+  // Highest combined score in a single matchup
+  const highestCombined = weekGames
+    .filter(m => m.homeOwner !== m.awayOwner)
     .map(m => ({ ...m, combined: m.homeScore + m.awayScore,
       winner: m.homeScore > m.awayScore ? m.homeOwner : m.awayOwner,
       loser: m.homeScore > m.awayScore ? m.awayOwner : m.homeOwner,
@@ -497,7 +522,7 @@ async function bootAllTime(seasons) {
     })).sort((a,b) => b.combined - a.combined).slice(0, 5);
 
   // Lowest combined score in a single matchup
-  const lowestCombined = realMatchups
+  const lowestCombined = weekGames
     .filter(m => m.homeOwner !== m.awayOwner)
     .map(m => ({ ...m, combined: m.homeScore + m.awayScore,
       winner: m.homeScore > m.awayScore ? m.homeOwner : m.awayOwner,
@@ -506,9 +531,9 @@ async function bootAllTime(seasons) {
       loseScore: Math.min(m.homeScore, m.awayScore),
     })).sort((a,b) => a.combined - b.combined).slice(0, 5);
 
-  // Highest losing score (best score that still lost, exclude combined weeks)
-  const highestLosing = realMatchups
-    .filter(m => m.homeOwner !== m.awayOwner && !m.weekLabel.includes('-'))
+  // Highest losing score (best score that still lost)
+  const highestLosing = weekGames
+    .filter(m => m.homeOwner !== m.awayOwner)
     .map(m => ({
       ...m,
       loser: m.homeScore > m.awayScore ? m.awayOwner : m.homeOwner,
@@ -517,7 +542,7 @@ async function bootAllTime(seasons) {
     })).sort((a,b) => b.loserScore - a.loserScore).slice(0, 5);
 
   // Lowest winning score (worst score that still won)
-  const lowestWinning = realMatchups
+  const lowestWinning = weekGames
     .filter(m => m.homeOwner !== m.awayOwner)
     .map(m => ({
       ...m,
@@ -571,12 +596,24 @@ async function bootAllTime(seasons) {
     owner, ...longestStreak(results, false),
   })).sort((a,b) => b.length - a.length);
 
-  // Highest scoring seasons
+  // Highest scoring seasons — REGULAR SEASON PF summed from the schedule.
+  // (t.pointsFor isn't consistent across years: the 2023/2024 archive data
+  // includes playoff weeks, while ESPN's 2025+ value is regular season only.)
   const ownerSeasonPF = [];
   allData.forEach((data, idx) => {
     const season = data.meta?.season ?? seasons[idx];
+    const regWeeks = data.settings?.regularSeasonWeeks ?? 14;
+    const sched = finalizedSchedule(data.schedule, data.finalizedWeek);
     data.teams.forEach(t => {
-      ownerSeasonPF.push({ owner: normOwner(t.owner), team: t.name, season, pf: t.pointsFor });
+      let pf = 0;
+      Object.entries(sched).forEach(([w, ms]) => {
+        if (Number(w) > regWeeks) return;
+        (ms ?? []).forEach(m => {
+          if (m.homeTeamId === t.id) pf += m.homeScore || 0;
+          else if (m.awayTeamId === t.id) pf += m.awayScore || 0;
+        });
+      });
+      ownerSeasonPF.push({ owner: normOwner(t.owner), team: t.name, season, pf });
     });
   });
   ownerSeasonPF.sort((a,b) => b.pf - a.pf);
@@ -787,7 +824,7 @@ async function bootAllTime(seasons) {
   const eloSeasonInputs = allData.map((d, i) => ({
     season: d.meta?.season ?? seasons[i],
     teams: d.teams,
-    schedule: d.schedule,
+    schedule: finalizedSchedule(d.schedule, d.finalizedWeek),
     settings: d.settings,
   }));
   const careerElo = computeCareerElo(eloSeasonInputs, normOwner);
@@ -869,7 +906,8 @@ function renderStandings() {
 
   const sorted = [...summary].sort((a, b) => b.wins - a.wins || b.totalPts - a.totalPts);
   const tbody = document.getElementById('standings-body');
-  const totalGames = includePlayoffs ? APP.weekGroups.length : weeks.length;
+  // W% uses finalized games so it lines up with the (Tuesday-frozen) W/L record
+  const totalGames = includePlayoffs ? APP.finalGroups.length : APP.finalWeeks.length;
   tbody.innerHTML = sorted.map((s, i) => {
     const pct = totalGames ? (s.wins / totalGames) : 0;
     const wax = s.wins - s.xW;
@@ -1873,7 +1911,8 @@ function renderPowerRankings() {
 // ── xW Progression Chart (Scaled) ────────────────────────────────────────
 let _xwChart = null;
 function renderXWChart() {
-  const { teams, weekGroups, pyth } = APP;
+  const { teams, pyth } = APP;
+  const weekGroups = APP.finalGroups;   // xW only moves once a week is finalized
   const ctx = document.getElementById('xw-chart').getContext('2d');
 
   const palette = ['#00d4ff','#ff6b2b','#7fff6b','#f59e0b','#a78bfa','#ec4899','#22c55e','#fbbf24','#60a5fa','#f87171'];
