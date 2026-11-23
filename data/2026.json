@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-20T13:54:31.787680",
+  "lastUpdated": "2026-11-23T15:47:00.342820",
   "season": 2026,
   "leagueId": 12705243,
   "settings": {
@@ -167,7 +167,7 @@
       "pointsFor": 1288.48,
       "pointsAgainst": 1377.66,
       "playoffSeed": 0,
-      "playoffPct": 35.8
+      "playoffPct": 39.95
     },
     {
       "id": 2,
@@ -180,7 +180,7 @@
       "pointsFor": 1169.82,
       "pointsAgainst": 1224.94,
       "playoffSeed": 0,
-      "playoffPct": 69.39999999999999
+      "playoffPct": 70.25
     },
     {
       "id": 3,
@@ -193,7 +193,7 @@
       "pointsFor": 1289.54,
       "pointsAgainst": 1274.82,
       "playoffSeed": 0,
-      "playoffPct": 48.975
+      "playoffPct": 44.7
     },
     {
       "id": 4,
@@ -206,7 +206,7 @@
       "pointsFor": 1427.8400000000001,
       "pointsAgainst": 1134.9,
       "playoffSeed": 0,
-      "playoffPct": 99.875
+      "playoffPct": 99.85000000000001
     },
     {
       "id": 5,
@@ -219,7 +219,7 @@
       "pointsFor": 1236.12,
       "pointsAgainst": 1277.42,
       "playoffSeed": 0,
-      "playoffPct": 50.775000000000006
+      "playoffPct": 47.425
     },
     {
       "id": 6,
@@ -232,7 +232,7 @@
       "pointsFor": 1202.6,
       "pointsAgainst": 1278.9,
       "playoffSeed": 0,
-      "playoffPct": 8.6
+      "playoffPct": 7.6499999999999995
     },
     {
       "id": 7,
@@ -245,7 +245,7 @@
       "pointsFor": 1438.3399999999997,
       "pointsAgainst": 1370.3,
       "playoffSeed": 0,
-      "playoffPct": 60.25
+      "playoffPct": 63.324999999999996
     },
     {
       "id": 8,
@@ -258,7 +258,7 @@
       "pointsFor": 1159.74,
       "pointsAgainst": 1273.54,
       "playoffSeed": 0,
-      "playoffPct": 26.325
+      "playoffPct": 26.85
     }
   ],
   "schedule": {
@@ -22307,10 +22307,10 @@
         "week": 11,
         "homeTeamId": 5,
         "awayTeamId": 7,
-        "homeScore": 20.8,
-        "awayScore": 0,
-        "homeScoreApi": 20.8,
-        "awayScoreApi": 0.0,
+        "homeScore": 77.44,
+        "awayScore": 79.2,
+        "homeScoreApi": 77.44,
+        "awayScoreApi": 79.2,
         "isBye": false,
         "homeLineup": [
           {
@@ -22328,10 +22328,18 @@
             "proTeam": "LAC",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 10.3,
             "projected": 13.45,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 8.9,
+              "Each reception": 1.0,
+              "Receiving Yards": 0.4
+            },
+            "rawStats": {
+              "Rushing Yards": 89.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 4.0
+            }
           },
           {
             "name": "A.J. Brown",
@@ -22366,20 +22374,36 @@
             "proTeam": "BAL",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 14.11,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 16.4,
+            "projected": 14.12,
+            "breakdown": {
+              "Rushing Yards": -1.3,
+              "Each reception": 8.0,
+              "Receiving Yards": 9.7
+            },
+            "rawStats": {
+              "Rushing Yards": -13.0,
+              "Each reception": 8.0,
+              "Receiving Yards": 97.0
+            }
           },
           {
             "name": "Bhayshul Tuten",
             "proTeam": "JAX",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
+            "points": 8.3,
             "projected": 16.9,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 3.3,
+              "Each reception": 3.0,
+              "Receiving Yards": 2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 33.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 20.0
+            }
           },
           {
             "name": "Christian Watson",
@@ -22407,7 +22431,7 @@
             "position": "RB",
             "slot": "RB",
             "points": 0.0,
-            "projected": 15.6,
+            "projected": 15.58,
             "breakdown": {},
             "rawStats": {}
           },
@@ -22416,20 +22440,18 @@
             "proTeam": "NYJ",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 7.52,
-            "breakdown": {},
-            "rawStats": {}
-          },
-          {
-            "name": "Brenton Strange",
-            "proTeam": "JAX",
-            "position": "TE",
-            "slot": "BE",
-            "points": 0.0,
-            "projected": 8.01,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 9.4,
+            "projected": 7.67,
+            "breakdown": {
+              "Rushing Yards": 7.5,
+              "Each reception": 1.0,
+              "Receiving Yards": 0.9
+            },
+            "rawStats": {
+              "Rushing Yards": 75.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 9.0
+            }
           },
           {
             "name": "Josh Jacobs",
@@ -22446,20 +22468,38 @@
             "proTeam": "NO",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 11.74,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 2.0,
+            "projected": 11.75,
+            "breakdown": {
+              "Rushing Yards": 0.4,
+              "Each reception": 1.0,
+              "Receiving Yards": 0.6
+            },
+            "rawStats": {
+              "Rushing Yards": 4.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 6.0
+            }
           },
           {
             "name": "Trevor Lawrence",
             "proTeam": "JAX",
             "position": "QB",
             "slot": "QB",
-            "points": 0.0,
-            "projected": 16.6,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.74,
+            "projected": 16.62,
+            "breakdown": {
+              "TD Pass": 4.0,
+              "Rushing Yards": 0.7,
+              "Passing Yards": 12.04,
+              "Interceptions Thrown": -6.0
+            },
+            "rawStats": {
+              "TD Pass": 1.0,
+              "Rushing Yards": 7.0,
+              "Passing Yards": 301.0,
+              "Interceptions Thrown": 2.0
+            }
           },
           {
             "name": "Jadarian Price",
@@ -22476,20 +22516,52 @@
             "proTeam": "CHI",
             "position": "TE",
             "slot": "TE",
-            "points": 0.0,
+            "points": 11.9,
             "projected": 12.64,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 3.0,
+              "Receiving Yards": 2.9,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 3.0,
+              "Receiving Yards": 29.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Kaelon Black",
             "proTeam": "SF",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
+            "points": 2.5,
             "projected": 6.45,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 0.8,
+              "Each reception": 1.0,
+              "Receiving Yards": 0.7
+            },
+            "rawStats": {
+              "Rushing Yards": 8.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 7.0
+            }
+          },
+          {
+            "name": "Makai Lemon",
+            "proTeam": "PHI",
+            "position": "WR",
+            "slot": "BE",
+            "points": 1.3,
+            "projected": 7.81,
+            "breakdown": {
+              "Each reception": 1.0,
+              "Receiving Yards": 0.3
+            },
+            "rawStats": {
+              "Each reception": 1.0,
+              "Receiving Yards": 3.0
+            }
           }
         ],
         "awayLineup": [
@@ -22498,30 +22570,58 @@
             "proTeam": "BUF",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 20.84,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 17.2,
+            "projected": 20.87,
+            "breakdown": {
+              "Rushing Yards": 8.9,
+              "TD Rush": 6.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 0.3
+            },
+            "rawStats": {
+              "Rushing Yards": 89.0,
+              "TD Rush": 1.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 3.0
+            }
           },
           {
             "name": "Justin Jefferson",
             "proTeam": "MIN",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
+            "points": 13.7,
             "projected": 19.96,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 0.1,
+              "Each reception": 7.0,
+              "Receiving Yards": 8.6,
+              "Total Fumbles Lost": -2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 1.0,
+              "Each reception": 7.0,
+              "Receiving Yards": 86.0,
+              "Total Fumbles Lost": 1.0
+            }
           },
           {
             "name": "Trey McBride",
             "proTeam": "ARI",
             "position": "TE",
             "slot": "TE",
-            "points": 0.0,
-            "projected": 12.87,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 14.8,
+            "projected": 13.1,
+            "breakdown": {
+              "Rushing Yards": 0.4,
+              "Each reception": 9.0,
+              "Receiving Yards": 5.4
+            },
+            "rawStats": {
+              "Rushing Yards": 4.0,
+              "Each reception": 9.0,
+              "Receiving Yards": 54.0
+            }
           },
           {
             "name": "Davante Adams",
@@ -22549,7 +22649,7 @@
             "position": "WR",
             "slot": "WR",
             "points": 0.0,
-            "projected": 16.77,
+            "projected": 16.74,
             "breakdown": {},
             "rawStats": {}
           },
@@ -22558,20 +22658,36 @@
             "proTeam": "DET",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 19.3,
             "projected": 11.16,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 4.0,
+              "Receiving Yards": 9.3,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 4.0,
+              "Receiving Yards": 93.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Jaylen Warren",
             "proTeam": "PIT",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 15.67,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 4.9,
+            "projected": 15.64,
+            "breakdown": {
+              "Rushing Yards": 2.8,
+              "Each reception": 2.0,
+              "Receiving Yards": 0.1
+            },
+            "rawStats": {
+              "Rushing Yards": 28.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 1.0
+            }
           },
           {
             "name": "J.K. Dobbins",
@@ -22598,10 +22714,20 @@
             "proTeam": "MIN",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
+            "points": 11.3,
             "projected": 8.42,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 3.0,
+              "TD Rush": 6.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 1.3
+            },
+            "rawStats": {
+              "Rushing Yards": 30.0,
+              "TD Rush": 1.0,
+              "Each reception": 1.0,
+              "Receiving Yards": 13.0
+            }
           },
           {
             "name": "Isiah Pacheco",
@@ -22618,17 +22744,25 @@
             "proTeam": "CHI",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 15.09,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 3.3,
+            "projected": 15.08,
+            "breakdown": {
+              "Rushing Yards": 0.3,
+              "Each reception": 2.0,
+              "Receiving Yards": 1.0
+            },
+            "rawStats": {
+              "Rushing Yards": 3.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 10.0
+            }
           },
           {
             "name": "Matt Gay",
             "proTeam": "LV",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 6.0,
             "projected": 6.78,
             "breakdown": {},
             "rawStats": {}
@@ -22638,10 +22772,18 @@
             "proTeam": "BUF",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 9.41,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 15.3,
+            "projected": 10.05,
+            "breakdown": {
+              "Rushing Yards": 0.2,
+              "Each reception": 5.0,
+              "Receiving Yards": 10.1
+            },
+            "rawStats": {
+              "Rushing Yards": 2.0,
+              "Each reception": 5.0,
+              "Receiving Yards": 101.0
+            }
           },
           {
             "name": "Blake Corum",
@@ -22659,7 +22801,7 @@
             "position": "RB",
             "slot": "BE",
             "points": 0.0,
-            "projected": 4.46,
+            "projected": 0.0,
             "breakdown": {},
             "rawStats": {}
           }
@@ -22669,10 +22811,10 @@
         "week": 11,
         "homeTeamId": 3,
         "awayTeamId": 1,
-        "homeScore": 3.3,
-        "awayScore": 5.7,
-        "homeScoreApi": 3.3,
-        "awayScoreApi": 5.7,
+        "homeScore": 87.56,
+        "awayScore": 152.56,
+        "homeScoreApi": 87.56,
+        "awayScoreApi": 152.56,
         "isBye": false,
         "homeLineup": [
           {
@@ -22690,20 +22832,40 @@
             "proTeam": "BAL",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
+            "points": 19.1,
             "projected": 14.54,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 9.4,
+              "TD Rush": 6.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 1.7,
+              "Total Fumbles Lost": -2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 94.0,
+              "TD Rush": 1.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 17.0,
+              "Total Fumbles Lost": 1.0
+            }
           },
           {
             "name": "Josh Allen",
             "proTeam": "BUF",
             "position": "QB",
             "slot": "QB",
-            "points": 0.0,
-            "projected": 20.73,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.16,
+            "projected": 20.71,
+            "breakdown": {
+              "TD Pass": 4.0,
+              "Passing Yards": 12.16,
+              "Interceptions Thrown": -6.0
+            },
+            "rawStats": {
+              "TD Pass": 1.0,
+              "Passing Yards": 304.0,
+              "Interceptions Thrown": 2.0
+            }
           },
           {
             "name": "Kyren Williams",
@@ -22720,20 +22882,32 @@
             "proTeam": "TEN",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 18.46,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 11.0,
+            "projected": 20.81,
+            "breakdown": {
+              "Rushing Yards": 11.0
+            },
+            "rawStats": {
+              "Rushing Yards": 110.0
+            }
           },
           {
             "name": "DJ Moore",
             "proTeam": "BUF",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 13.62,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 23.1,
+            "projected": 13.7,
+            "breakdown": {
+              "Each reception": 8.0,
+              "Receiving Yards": 9.1,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 8.0,
+              "Receiving Yards": 91.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Tucker Kraft",
@@ -22750,10 +22924,20 @@
             "proTeam": "DAL",
             "position": "QB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 19.6,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 35.9,
+            "projected": 19.59,
+            "breakdown": {
+              "TD Pass": 16.0,
+              "Rushing Yards": 0.9,
+              "TD Rush": 6.0,
+              "Passing Yards": 13.0
+            },
+            "rawStats": {
+              "TD Pass": 4.0,
+              "Rushing Yards": 9.0,
+              "TD Rush": 1.0,
+              "Passing Yards": 325.0
+            }
           },
           {
             "name": "RJ Harvey",
@@ -22770,7 +22954,7 @@
             "proTeam": "DAL",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 9.0,
             "projected": 9.8,
             "breakdown": {},
             "rawStats": {}
@@ -22780,30 +22964,50 @@
             "proTeam": "MIN",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
+            "points": 4.7,
             "projected": 8.57,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 3.8,
+              "Each reception": 1.0,
+              "Receiving Yards": -0.1
+            },
+            "rawStats": {
+              "Rushing Yards": 38.0,
+              "Each reception": 1.0,
+              "Receiving Yards": -1.0
+            }
           },
           {
             "name": "Tre Tucker",
             "proTeam": "LV",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 8.18,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.0,
+            "projected": 9.72,
+            "breakdown": {
+              "Each reception": 2.0,
+              "Receiving Yards": 5.0
+            },
+            "rawStats": {
+              "Each reception": 2.0,
+              "Receiving Yards": 50.0
+            }
           },
           {
             "name": "Caleb Douglas",
             "proTeam": "MIA",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
+            "points": 5.0,
             "projected": 9.67,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 2.0,
+              "Receiving Yards": 3.0
+            },
+            "rawStats": {
+              "Each reception": 2.0,
+              "Receiving Yards": 30.0
+            }
           },
           {
             "name": "Jordan Addison",
@@ -22830,10 +23034,16 @@
             "proTeam": "KC",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
+            "points": 9.9,
             "projected": 9.03,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 4.0,
+              "Receiving Yards": 5.9
+            },
+            "rawStats": {
+              "Each reception": 4.0,
+              "Receiving Yards": 59.0
+            }
           },
           {
             "name": "Xavier Hutchinson",
@@ -22858,10 +23068,20 @@
             "proTeam": "DET",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
+            "points": 27.8,
             "projected": 21.94,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 9.8,
+              "TD Rush": 12.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 98.0,
+              "TD Rush": 2.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 20.0
+            }
           },
           {
             "name": "Drake London",
@@ -22878,20 +23098,38 @@
             "proTeam": "LV",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 13.76,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 27.9,
+            "projected": 14.1,
+            "breakdown": {
+              "Rushing Yards": 7.9,
+              "Each reception": 5.0,
+              "Receiving Yards": 9.0,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 79.0,
+              "Each reception": 5.0,
+              "Receiving Yards": 90.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Malik Nabers",
             "proTeam": "NYG",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 16.19,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 18.5,
+            "projected": 16.18,
+            "breakdown": {
+              "Each reception": 7.0,
+              "Receiving Yards": 5.5,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 7.0,
+              "Receiving Yards": 55.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Quinshon Judkins",
@@ -22908,30 +23146,52 @@
             "proTeam": "TB",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 17.16,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 19.0,
+            "projected": 17.46,
+            "breakdown": {
+              "Rushing Yards": 6.8,
+              "TD Rush": 6.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 3.2
+            },
+            "rawStats": {
+              "Rushing Yards": 68.0,
+              "TD Rush": 1.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 32.0
+            }
           },
           {
             "name": "Jaylen Waddle",
             "proTeam": "DEN",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
+            "points": 9.1,
             "projected": 12.49,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 3.0,
+              "Receiving Yards": 6.1
+            },
+            "rawStats": {
+              "Each reception": 3.0,
+              "Receiving Yards": 61.0
+            }
           },
           {
             "name": "Sam LaPorta",
             "proTeam": "DET",
             "position": "TE",
             "slot": "TE",
-            "points": 0.0,
+            "points": 9.2,
             "projected": 9.53,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 3.0,
+              "Receiving Yards": 6.2
+            },
+            "rawStats": {
+              "Each reception": 3.0,
+              "Receiving Yards": 62.0
+            }
           },
           {
             "name": "Matthew Stafford",
@@ -22948,20 +23208,32 @@
             "proTeam": "PIT",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 11.12,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 1.2,
+            "projected": 11.06,
+            "breakdown": {
+              "Each reception": 1.0,
+              "Receiving Yards": 0.2
+            },
+            "rawStats": {
+              "Each reception": 1.0,
+              "Receiving Yards": 2.0
+            }
           },
           {
             "name": "Patrick Mahomes",
             "proTeam": "KC",
             "position": "QB",
             "slot": "QB",
-            "points": 0.0,
-            "projected": 19.49,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 23.96,
+            "projected": 19.48,
+            "breakdown": {
+              "TD Pass": 12.0,
+              "Passing Yards": 12.96
+            },
+            "rawStats": {
+              "TD Pass": 3.0,
+              "Passing Yards": 324.0
+            }
           },
           {
             "name": "Denzel Boston",
@@ -22979,7 +23251,7 @@
             "position": "WR",
             "slot": "IR",
             "points": 0.0,
-            "projected": 5.87,
+            "projected": 0.0,
             "breakdown": {},
             "rawStats": {}
           },
@@ -22988,7 +23260,7 @@
             "proTeam": "JAX",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 12.0,
             "projected": 9.54,
             "breakdown": {},
             "rawStats": {}
@@ -22999,7 +23271,7 @@
             "position": "WR",
             "slot": "RB/WR/TE",
             "points": 5.7,
-            "projected": 10.42,
+            "projected": 10.41,
             "breakdown": {
               "Each reception": 3.0,
               "Receiving Yards": 2.7
@@ -23014,20 +23286,32 @@
             "proTeam": "CHI",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 11.47,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 8.5,
+            "projected": 11.46,
+            "breakdown": {
+              "Each reception": 4.0,
+              "Receiving Yards": 4.5
+            },
+            "rawStats": {
+              "Each reception": 4.0,
+              "Receiving Yards": 45.0
+            }
           },
           {
             "name": "T.J. Hockenson",
             "proTeam": "MIN",
             "position": "TE",
             "slot": "BE",
-            "points": 0.0,
+            "points": 11.5,
             "projected": 11.69,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 5.5
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 55.0
+            }
           }
         ]
       },
@@ -23035,19 +23319,19 @@
         "week": 11,
         "homeTeamId": 2,
         "awayTeamId": 6,
-        "homeScore": 15.4,
-        "awayScore": 0,
-        "homeScoreApi": 15.4,
-        "awayScoreApi": 0.0,
+        "homeScore": 115.7,
+        "awayScore": 132.34,
+        "homeScoreApi": 115.7,
+        "awayScoreApi": 132.34,
         "isBye": false,
         "homeLineup": [
           {
             "name": "Brock Bowers",
             "proTeam": "LV",
             "position": "TE",
-            "slot": "TE",
+            "slot": "BE",
             "points": 0.0,
-            "projected": 15.34,
+            "projected": 0.0,
             "breakdown": {},
             "rawStats": {}
           },
@@ -23056,10 +23340,16 @@
             "proTeam": "PHI",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 13.0,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 9.1,
+            "projected": 13.38,
+            "breakdown": {
+              "Each reception": 5.0,
+              "Receiving Yards": 4.1
+            },
+            "rawStats": {
+              "Each reception": 5.0,
+              "Receiving Yards": 41.0
+            }
           },
           {
             "name": "David Montgomery",
@@ -23084,30 +23374,46 @@
             "proTeam": "CHI",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 1.8,
             "projected": 8.92,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 1.8
+            },
+            "rawStats": {
+              "Rushing Yards": 18.0
+            }
           },
           {
             "name": "Jalen Coker",
             "proTeam": "CAR",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 8.78,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 8.7,
+            "projected": 8.79,
+            "breakdown": {
+              "Each reception": 4.0,
+              "Receiving Yards": 4.7
+            },
+            "rawStats": {
+              "Each reception": 4.0,
+              "Receiving Yards": 47.0
+            }
           },
           {
             "name": "Brock Purdy",
             "proTeam": "SF",
             "position": "QB",
             "slot": "QB",
-            "points": 0.0,
+            "points": 21.2,
             "projected": 14.31,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "TD Pass": 12.0,
+              "Passing Yards": 10.2
+            },
+            "rawStats": {
+              "TD Pass": 3.0,
+              "Passing Yards": 255.0
+            }
           },
           {
             "name": "Matthew Golden",
@@ -23123,11 +23429,19 @@
             "name": "Travis Kelce",
             "proTeam": "KC",
             "position": "TE",
-            "slot": "BE",
-            "points": 0.0,
+            "slot": "TE",
+            "points": 25.4,
             "projected": 11.34,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 7.4,
+              "TD Reception": 12.0
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 74.0,
+              "TD Reception": 2.0
+            }
           },
           {
             "name": "Zach Charbonnet",
@@ -23144,20 +23458,32 @@
             "proTeam": "MIN",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 2.0,
             "projected": 8.7,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "FG Missed (50-59 yards)": -2.0
+            },
+            "rawStats": {
+              "FG Missed (50-59 yards)": 1.0
+            }
           },
           {
             "name": "Rico Dowdle",
             "proTeam": "PIT",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 9.14,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.4,
+            "projected": 9.12,
+            "breakdown": {
+              "Rushing Yards": 1.5,
+              "Each reception": 4.0,
+              "Receiving Yards": 1.9
+            },
+            "rawStats": {
+              "Rushing Yards": 15.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 19.0
+            }
           },
           {
             "name": "Kenneth Walker III",
@@ -23174,40 +23500,64 @@
             "proTeam": "NO",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 11.22,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.6,
+            "projected": 11.87,
+            "breakdown": {
+              "Rushing Yards": 7.6
+            },
+            "rawStats": {
+              "Rushing Yards": 76.0
+            }
           },
           {
             "name": "Jakobi Meyers",
             "proTeam": "JAX",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
+            "points": 12.5,
             "projected": 10.91,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 4.0,
+              "Receiving Yards": 8.5
+            },
+            "rawStats": {
+              "Each reception": 4.0,
+              "Receiving Yards": 85.0
+            }
           },
           {
             "name": "Ryan Flournoy",
             "proTeam": "DAL",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 9.66,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 2.1,
+            "projected": 9.64,
+            "breakdown": {
+              "Each reception": 1.0,
+              "Receiving Yards": 1.1
+            },
+            "rawStats": {
+              "Each reception": 1.0,
+              "Receiving Yards": 11.0
+            }
           },
           {
             "name": "Ladd McConkey",
             "proTeam": "LAC",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 10.75,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 20.7,
+            "projected": 10.76,
+            "breakdown": {
+              "Each reception": 5.0,
+              "Receiving Yards": 3.7,
+              "TD Reception": 12.0
+            },
+            "rawStats": {
+              "Each reception": 5.0,
+              "Receiving Yards": 37.0,
+              "TD Reception": 2.0
+            }
           }
         ],
         "awayLineup": [
@@ -23216,20 +23566,36 @@
             "proTeam": "DET",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
+            "points": 14.7,
             "projected": 17.7,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 5.0,
+              "Receiving Yards": 3.7,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 5.0,
+              "Receiving Yards": 37.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "CeeDee Lamb",
             "proTeam": "DAL",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 22.46,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 30.2,
+            "projected": 22.42,
+            "breakdown": {
+              "Each reception": 11.0,
+              "Receiving Yards": 13.2,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 11.0,
+              "Receiving Yards": 132.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Jeremiyah Love",
@@ -23246,20 +23612,42 @@
             "proTeam": "NYJ",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 12.93,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 19.0,
+            "projected": 13.08,
+            "breakdown": {
+              "Rushing Yards": 8.6,
+              "Each reception": 3.0,
+              "Receiving Yards": 1.4,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 86.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 14.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "D'Andre Swift",
             "proTeam": "CHI",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 11.9,
             "projected": 16.85,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 5.1,
+              "Each reception": 2.0,
+              "Receiving Yards": 0.8,
+              "Total Fumbles Lost": -2.0,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 51.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 8.0,
+              "Total Fumbles Lost": 1.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Harold Fannin Jr.",
@@ -23276,60 +23664,112 @@
             "proTeam": "TEN",
             "position": "WR",
             "slot": "IR",
-            "points": 0.0,
-            "projected": 13.11,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 13.8,
+            "projected": 13.14,
+            "breakdown": {
+              "Each reception": 2.0,
+              "Receiving Yards": 5.8,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 2.0,
+              "Receiving Yards": 58.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Mike Evans",
             "proTeam": "SF",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 0.0,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 22.9,
+            "projected": 11.47,
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 10.9,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 109.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Caleb Williams",
             "proTeam": "CHI",
             "position": "QB",
             "slot": "QB",
-            "points": 0.0,
-            "projected": 15.94,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 11.34,
+            "projected": 15.88,
+            "breakdown": {
+              "TD Pass": 8.0,
+              "Rushing Yards": 1.1,
+              "Passing Yards": 7.24,
+              "Interceptions Thrown": -3.0
+            },
+            "rawStats": {
+              "TD Pass": 2.0,
+              "Rushing Yards": 11.0,
+              "Passing Yards": 181.0,
+              "Interceptions Thrown": 1.0
+            }
           },
           {
             "name": "Isaiah Likely",
             "proTeam": "NYG",
             "position": "TE",
             "slot": "TE",
-            "points": 0.0,
+            "points": 4.5,
             "projected": 13.1,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 1.0,
+              "Receiving Yards": 3.5
+            },
+            "rawStats": {
+              "Each reception": 1.0,
+              "Receiving Yards": 35.0
+            }
           },
           {
             "name": "Jonah Coleman",
             "proTeam": "DEN",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 19.38,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 34.9,
+            "projected": 19.39,
+            "breakdown": {
+              "Rushing Yards": 11.1,
+              "TD Rush": 18.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 1.8
+            },
+            "rawStats": {
+              "Rushing Yards": 111.0,
+              "TD Rush": 3.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 18.0
+            }
           },
           {
             "name": "Cam Skattebo",
             "proTeam": "NYG",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 14.46,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 5.8,
+            "projected": 14.45,
+            "breakdown": {
+              "Rushing Yards": 3.4,
+              "Each reception": 3.0,
+              "Receiving Yards": 1.4,
+              "Total Fumbles Lost": -2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 34.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 14.0,
+              "Total Fumbles Lost": 1.0
+            }
           },
           {
             "name": "Spencer Shrader",
@@ -23350,30 +23790,46 @@
             "proTeam": "MIN",
             "position": "QB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 11.75,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 5.4,
+            "projected": 11.77,
+            "breakdown": {
+              "Passing Yards": 9.4,
+              "Interceptions Thrown": -3.0
+            },
+            "rawStats": {
+              "Passing Yards": 235.0,
+              "Interceptions Thrown": 1.0
+            }
           },
           {
             "name": "Tyler Allgeier",
             "proTeam": "ARI",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 7.1,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 2.3,
+            "projected": 7.12,
+            "breakdown": {
+              "Rushing Yards": 2.3
+            },
+            "rawStats": {
+              "Rushing Yards": 23.0
+            }
           },
           {
             "name": "Germie Bernard",
             "proTeam": "PIT",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 3.18,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 10.0,
+            "projected": 6.82,
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 4.0
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 40.0
+            }
           },
           {
             "name": "Jordan Love",
@@ -23391,10 +23847,10 @@
         "week": 11,
         "homeTeamId": 8,
         "awayTeamId": 4,
-        "homeScore": 25.16,
-        "awayScore": 3.2,
-        "homeScoreApi": 25.16,
-        "awayScoreApi": 3.2,
+        "homeScore": 120.26,
+        "awayScore": 127.1,
+        "homeScoreApi": 120.26,
+        "awayScoreApi": 127.1,
         "isBye": false,
         "homeLineup": [
           {
@@ -23403,7 +23859,7 @@
             "position": "WR",
             "slot": "WR",
             "points": 0.0,
-            "projected": 25.41,
+            "projected": 25.37,
             "breakdown": {},
             "rawStats": {}
           },
@@ -23412,80 +23868,140 @@
             "proTeam": "PHI",
             "position": "RB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 11.96,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 13.5,
+            "projected": 12.04,
+            "breakdown": {
+              "Rushing Yards": 7.5,
+              "TD Rush": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 75.0,
+              "TD Rush": 1.0
+            }
           },
           {
             "name": "Rashee Rice",
             "proTeam": "KC",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
+            "points": 11.3,
             "projected": 12.78,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 5.3
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 53.0
+            }
           },
           {
             "name": "George Pickens",
             "proTeam": "DAL",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 15.67,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 23.8,
+            "projected": 15.64,
+            "breakdown": {
+              "Rushing Yards": 0.6,
+              "Each reception": 7.0,
+              "Receiving Yards": 10.2,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 6.0,
+              "Each reception": 7.0,
+              "Receiving Yards": 102.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "George Kittle",
             "proTeam": "SF",
             "position": "TE",
             "slot": "TE",
-            "points": 0.0,
-            "projected": 14.31,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 18.4,
+            "projected": 13.06,
+            "breakdown": {
+              "Each reception": 3.0,
+              "Receiving Yards": 3.4,
+              "TD Reception": 12.0
+            },
+            "rawStats": {
+              "Each reception": 3.0,
+              "Receiving Yards": 34.0,
+              "TD Reception": 2.0
+            }
           },
           {
             "name": "Dallas Goedert",
             "proTeam": "PHI",
             "position": "TE",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 8.1,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 4.8,
+            "projected": 8.21,
+            "breakdown": {
+              "Each reception": 1.0,
+              "Receiving Yards": 3.8
+            },
+            "rawStats": {
+              "Each reception": 1.0,
+              "Receiving Yards": 38.0
+            }
           },
           {
             "name": "Deebo Samuel Sr.",
             "proTeam": "SF",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 10.95,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 7.7,
+            "projected": 10.3,
+            "breakdown": {
+              "Rushing Yards": 2.7,
+              "Each reception": 3.0,
+              "Receiving Yards": 2.0
+            },
+            "rawStats": {
+              "Rushing Yards": 27.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 20.0
+            }
           },
           {
             "name": "Ollie Gordon II",
             "proTeam": "MIA",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
+            "points": 8.7,
             "projected": 13.81,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 6.9,
+              "Each reception": 2.0,
+              "Receiving Yards": -0.2
+            },
+            "rawStats": {
+              "Rushing Yards": 69.0,
+              "Each reception": 2.0,
+              "Receiving Yards": -2.0
+            }
           },
           {
             "name": "Jared Goff",
             "proTeam": "DET",
             "position": "QB",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 11.58,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 19.36,
+            "projected": 11.6,
+            "breakdown": {
+              "TD Pass": 8.0,
+              "Rushing Yards": 1.2,
+              "Passing Yards": 11.16
+            },
+            "rawStats": {
+              "TD Pass": 2.0,
+              "Rushing Yards": 12.0,
+              "Passing Yards": 279.0
+            }
           },
           {
             "name": "Woody Marks",
@@ -23522,30 +24038,50 @@
             "proTeam": "MIA",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
+            "points": 7.1,
             "projected": 7.57,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 1.1,
+              "Each reception": 3.0,
+              "Receiving Yards": 3.0
+            },
+            "rawStats": {
+              "Rushing Yards": 11.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 30.0
+            }
           },
           {
             "name": "Tyler Bass",
             "proTeam": "BUF",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 13.0,
             "projected": 9.61,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "FG Made (50-59 yards)": 4.0,
+              "FG Missed (50-59 yards)": -2.0
+            },
+            "rawStats": {
+              "FG Made (50-59 yards)": 1.0,
+              "FG Missed (50-59 yards)": 1.0
+            }
           },
           {
             "name": "Garrett Wilson",
             "proTeam": "NYJ",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 6.9,
             "projected": 14.1,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 3.0,
+              "Receiving Yards": 3.9
+            },
+            "rawStats": {
+              "Each reception": 3.0,
+              "Receiving Yards": 39.0
+            }
           },
           {
             "name": "Jonathan Taylor",
@@ -23570,10 +24106,20 @@
             "proTeam": "KC",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 24.3,
             "projected": 20.16,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Rushing Yards": 10.5,
+              "TD Rush": 6.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 3.8
+            },
+            "rawStats": {
+              "Rushing Yards": 105.0,
+              "TD Rush": 1.0,
+              "Each reception": 4.0,
+              "Receiving Yards": 38.0
+            }
           }
         ],
         "awayLineup": [
@@ -23592,50 +24138,92 @@
             "proTeam": "SF",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 19.82,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 14.2,
+            "projected": 19.81,
+            "breakdown": {
+              "Rushing Yards": 4.9,
+              "TD Rush": 6.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 1.3
+            },
+            "rawStats": {
+              "Rushing Yards": 49.0,
+              "TD Rush": 1.0,
+              "Each reception": 2.0,
+              "Receiving Yards": 13.0
+            }
           },
           {
             "name": "Chris Olave",
             "proTeam": "NO",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 14.13,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 19.2,
+            "projected": 14.15,
+            "breakdown": {
+              "Each reception": 9.0,
+              "Receiving Yards": 10.2
+            },
+            "rawStats": {
+              "Each reception": 9.0,
+              "Receiving Yards": 102.0
+            }
           },
           {
             "name": "Javonte Williams",
             "proTeam": "DAL",
             "position": "RB",
             "slot": "RB/WR/TE",
-            "points": 0.0,
-            "projected": 19.53,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 24.1,
+            "projected": 19.49,
+            "breakdown": {
+              "Rushing Yards": 6.7,
+              "TD Rush": 6.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 2.4,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Rushing Yards": 67.0,
+              "TD Rush": 1.0,
+              "Each reception": 3.0,
+              "Receiving Yards": 24.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Emeka Egbuka",
             "proTeam": "TB",
             "position": "WR",
             "slot": "BE",
-            "points": 0.0,
-            "projected": 9.98,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 3.8,
+            "projected": 10.9,
+            "breakdown": {
+              "Each reception": 2.0,
+              "Receiving Yards": 1.8
+            },
+            "rawStats": {
+              "Each reception": 2.0,
+              "Receiving Yards": 18.0
+            }
           },
           {
             "name": "Tetairoa McMillan",
             "proTeam": "CAR",
             "position": "WR",
             "slot": "WR",
-            "points": 0.0,
-            "projected": 13.85,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 19.1,
+            "projected": 13.86,
+            "breakdown": {
+              "Each reception": 6.0,
+              "Receiving Yards": 7.1,
+              "TD Reception": 6.0
+            },
+            "rawStats": {
+              "Each reception": 6.0,
+              "Receiving Yards": 71.0,
+              "TD Reception": 1.0
+            }
           },
           {
             "name": "Tyler Warren",
@@ -23659,7 +24247,7 @@
             "position": "QB",
             "slot": "QB",
             "points": 0.0,
-            "projected": 16.32,
+            "projected": 16.31,
             "breakdown": {},
             "rawStats": {}
           },
@@ -23678,20 +24266,34 @@
             "proTeam": "JAX",
             "position": "WR",
             "slot": "RB/WR/TE",
-            "points": 0.0,
+            "points": 18.3,
             "projected": 15.04,
-            "breakdown": {},
-            "rawStats": {}
+            "breakdown": {
+              "Each reception": 8.0,
+              "Receiving Yards": 10.3
+            },
+            "rawStats": {
+              "Each reception": 8.0,
+              "Receiving Yards": 103.0
+            }
           },
           {
             "name": "Chuba Hubbard",
             "proTeam": "CAR",
             "position": "RB",
             "slot": "RB",
-            "points": 0.0,
-            "projected": 19.99,
-            "breakdown": {},
-            "rawStats": {}
+            "points": 26.0,
+            "projected": 20.7,
+            "breakdown": {
+              "Rushing Yards": 12.0,
+              "2pt Rushing Conversion": 2.0,
+              "TD Rush": 12.0
+            },
+            "rawStats": {
+              "Rushing Yards": 120.0,
+              "2pt Rushing Conversion": 1.0,
+              "TD Rush": 2.0
+            }
           },
           {
             "name": "Jason Myers",
@@ -23738,7 +24340,7 @@
             "proTeam": "TB",
             "position": "K",
             "slot": "K",
-            "points": 0.0,
+            "points": 3.0,
             "projected": 8.23,
             "breakdown": {},
             "rawStats": {}
@@ -23749,7 +24351,7 @@
             "position": "TE",
             "slot": "BE",
             "points": 0.0,
-            "projected": 8.6,
+            "projected": 0.0,
             "breakdown": {},
             "rawStats": {}
           }
