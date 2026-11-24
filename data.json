@@ -1,5 +1,5 @@
 {
-  "lastUpdated": "2026-11-24T08:55:28.754398",
+  "lastUpdated": "2026-11-24T15:30:48.012449",
   "season": 2026,
   "leagueId": 12705243,
   "settings": {
@@ -415,7 +415,7 @@
           },
           {
             "name": "Marvin Harrison Jr.",
-            "proTeam": "HOU",
+            "proTeam": "ARI",
             "position": "WR",
             "slot": "BE",
             "points": 4.3,
@@ -533,7 +533,7 @@
           },
           {
             "name": "Josh Downs",
-            "proTeam": "KC",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "BE",
             "points": 5.7,
@@ -1647,7 +1647,7 @@
           },
           {
             "name": "Harrison Mevis",
-            "proTeam": "None",
+            "proTeam": "LAR",
             "position": "K",
             "slot": "K",
             "points": 1.0,
@@ -3487,7 +3487,7 @@
           },
           {
             "name": "Marvin Harrison Jr.",
-            "proTeam": "HOU",
+            "proTeam": "ARI",
             "position": "WR",
             "slot": "BE",
             "points": 0.0,
@@ -4735,7 +4735,7 @@
           },
           {
             "name": "Harrison Mevis",
-            "proTeam": "None",
+            "proTeam": "LAR",
             "position": "K",
             "slot": "K",
             "points": 2.0,
@@ -5825,7 +5825,7 @@
           },
           {
             "name": "Josh Downs",
-            "proTeam": "KC",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "WR",
             "points": 12.7,
@@ -7525,7 +7525,7 @@
           },
           {
             "name": "Josh Downs",
-            "proTeam": "KC",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "WR",
             "points": 4.6,
@@ -8667,7 +8667,7 @@
           },
           {
             "name": "Kendre Miller",
-            "proTeam": "None",
+            "proTeam": "NO",
             "position": "RB",
             "slot": "BE",
             "points": 1.9,
@@ -9237,7 +9237,7 @@
           },
           {
             "name": "Keenan Allen",
-            "proTeam": "SF",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "BE",
             "points": 0.0,
@@ -10019,7 +10019,7 @@
           },
           {
             "name": "Josh Downs",
-            "proTeam": "KC",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "BE",
             "points": 7.7,
@@ -10051,7 +10051,7 @@
           },
           {
             "name": "Jacoby Brissett",
-            "proTeam": "BAL",
+            "proTeam": "ARI",
             "position": "QB",
             "slot": "QB",
             "points": 19.28,
@@ -10357,7 +10357,7 @@
           },
           {
             "name": "Kirk Cousins",
-            "proTeam": "MIN",
+            "proTeam": "LV",
             "position": "QB",
             "slot": "QB",
             "points": 10.72,
@@ -11415,7 +11415,7 @@
           },
           {
             "name": "Keenan Allen",
-            "proTeam": "SF",
+            "proTeam": "IND",
             "position": "WR",
             "slot": "BE",
             "points": 9.5,
@@ -11941,7 +11941,7 @@
           },
           {
             "name": "Kirk Cousins",
-            "proTeam": "MIN",
+            "proTeam": "LV",
             "position": "QB",
             "slot": "QB",
             "points": 17.52,
@@ -14345,7 +14345,7 @@
           },
           {
             "name": "Kirk Cousins",
-            "proTeam": "MIN",
+            "proTeam": "LV",
             "position": "QB",
             "slot": "BE",
             "points": 18.4,
@@ -17313,7 +17313,7 @@
           },
           {
             "name": "Kirk Cousins",
-            "proTeam": "MIN",
+            "proTeam": "LV",
             "position": "QB",
             "slot": "BE",
             "points": 27.18,
@@ -19813,7 +19813,7 @@
           },
           {
             "name": "Kirk Cousins",
-            "proTeam": "MIN",
+            "proTeam": "LV",
             "position": "QB",
             "slot": "BE",
             "points": 9.64,
@@ -25301,7 +25301,7 @@
             "name": "Jaxon Smith-Njigba",
             "proTeam": "SEA",
             "position": "WR",
-            "slot": "BE",
+            "slot": "RB/WR/TE",
             "points": 0.0,
             "projected": 21.59,
             "breakdown": {},
@@ -25331,7 +25331,7 @@
             "name": "Kyren Williams",
             "proTeam": "LAR",
             "position": "RB",
-            "slot": "BE",
+            "slot": "RB/WR/TE",
             "points": 0.0,
             "projected": 16.78,
             "breakdown": {},
@@ -25351,7 +25351,7 @@
             "name": "DJ Moore",
             "proTeam": "BUF",
             "position": "WR",
-            "slot": "RB/WR/TE",
+            "slot": "WR",
             "points": 0.0,
             "projected": 12.89,
             "breakdown": {},
@@ -25421,7 +25421,7 @@
             "name": "Caleb Douglas",
             "proTeam": "MIA",
             "position": "WR",
-            "slot": "WR",
+            "slot": "BE",
             "points": 0.0,
             "projected": 10.57,
             "breakdown": {},
@@ -25461,7 +25461,7 @@
             "name": "Xavier Hutchinson",
             "proTeam": "HOU",
             "position": "WR",
-            "slot": "RB/WR/TE",
+            "slot": "BE",
             "points": 0.0,
             "projected": 8.82,
             "breakdown": {},
@@ -26311,200 +26311,5 @@
       }
     ]
   },
-  "trades": [
-    {
-      "date": "2026-11-17T10:04:05.899000",
-      "ts": 1794927845899,
-      "sides": [
-        {
-          "teamId": 3,
-          "teamName": "CAM'S WARDENS",
-          "players": [
-            {
-              "name": "Colston Loveland",
-              "position": "TE",
-              "proTeam": "CHI",
-              "playerId": 4723086,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        },
-        {
-          "teamId": 5,
-          "teamName": "MVPickett",
-          "players": [
-            {
-              "name": "Josh Downs",
-              "position": "WR",
-              "proTeam": "KC",
-              "playerId": 4688813,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "date": "2026-10-29T18:36:02.387000",
-      "ts": 1793313362387,
-      "sides": [
-        {
-          "teamId": 2,
-          "teamName": "HORSEMAXXING",
-          "players": [
-            {
-              "name": "Jonathan Taylor",
-              "position": "RB",
-              "proTeam": "IND",
-              "playerId": 4242335,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            },
-            {
-              "name": "Garrett Wilson",
-              "position": "WR",
-              "proTeam": "NYJ",
-              "playerId": 4569618,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        },
-        {
-          "teamId": 8,
-          "teamName": "Doski",
-          "players": [
-            {
-              "name": "Kenneth Walker III",
-              "position": "RB",
-              "proTeam": "KC",
-              "playerId": 4567048,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "date": "2026-09-24T13:02:03.415000",
-      "ts": 1790269323415,
-      "sides": [
-        {
-          "teamId": 4,
-          "teamName": "DRAAAAAAKEEEEEE",
-          "players": [
-            {
-              "name": "Travis Kelce",
-              "position": "TE",
-              "proTeam": "KC",
-              "playerId": 15847,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        },
-        {
-          "teamId": 2,
-          "teamName": "HORSEMAXXING",
-          "players": [
-            {
-              "name": "Stefon Diggs",
-              "position": "WR",
-              "proTeam": "WSH",
-              "playerId": 2976212,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "date": "2026-09-23T21:08:02.373000",
-      "ts": 1790212082373,
-      "sides": [
-        {
-          "teamId": 2,
-          "teamName": "HORSEMAXXING",
-          "players": [
-            {
-              "name": "Cam Skattebo",
-              "position": "RB",
-              "proTeam": "NYG",
-              "playerId": 4696981,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        },
-        {
-          "teamId": 6,
-          "teamName": "Rod Wave \ud83c\udf54",
-          "players": [
-            {
-              "name": "Matthew Golden",
-              "position": "WR",
-              "proTeam": "GB",
-              "playerId": 4701936,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "date": "2026-09-18T21:38:00.831000",
-      "ts": 1789781880831,
-      "sides": [
-        {
-          "teamId": 7,
-          "teamName": "Met Life Crisis",
-          "players": [
-            {
-              "name": "Xavier Worthy",
-              "position": "WR",
-              "proTeam": "KC",
-              "playerId": 4683062,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            },
-            {
-              "name": "Chase Brown",
-              "position": "RB",
-              "proTeam": "CIN",
-              "playerId": 4362238,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        },
-        {
-          "teamId": 5,
-          "teamName": "MVPickett",
-          "players": [
-            {
-              "name": "Luther Burden III",
-              "position": "WR",
-              "proTeam": "CHI",
-              "playerId": 4685278,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            },
-            {
-              "name": "Travis Etienne Jr.",
-              "position": "RB",
-              "proTeam": "NO",
-              "playerId": 4239996,
-              "pointsTotalSeason": 0,
-              "pointsByTeam": {}
-            }
-          ]
-        }
-      ]
-    }
-  ]
+  "trades": []
 }
